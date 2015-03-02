@@ -12,12 +12,23 @@ import java.util.List;
 
 public class ServiceHelper {
 
-    public void startService(String processName){
+    public void startService(String processName, Context context){
         Intent i = new Intent();
         i.setComponent(new ComponentName(processName, processName + "Service"));
+        if(!isMyServiceRunning(processName + "Service",context)){
+            context.startService(i);
+        }
     }
 
-    private boolean isMyServiceRunning(String serviceName, Context context) {
+    public void stopService(String processName, Context context){
+        Intent i = new Intent();
+        i.setComponent(new ComponentName(processName, processName + "Service"));
+        if(isMyServiceRunning(processName + "Service",context)){
+            context.stopService(i);
+        }
+    }
+
+    public boolean isMyServiceRunning(String serviceName, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceName.equals(service.service.getClassName())) {
