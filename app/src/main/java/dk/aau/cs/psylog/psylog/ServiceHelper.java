@@ -44,10 +44,17 @@ public class ServiceHelper {
         }
     }
 
-    public static boolean isServiceRunning(String serviceName, Context context) {
+    public static HashMap<String,Boolean> servicesRunning(Context context){
+        HashMap<String, Boolean> resultHash = new HashMap<String,Boolean>();
+        for(String s : getInstalledProcessNames(context)){
+            resultHash.put(s,isServiceRunning(s,context));
+        }
+    }
+
+    public static boolean isServiceRunning(String processName, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceName.equals(service.service.getClassName())) {
+            if ((processName + serviceName).equals(service.service.getClassName())) {
                 return true;
             }
         }
