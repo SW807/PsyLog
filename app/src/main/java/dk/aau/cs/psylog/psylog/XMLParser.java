@@ -35,7 +35,7 @@ public class XMLParser {
                 case "column" : columns.add(new Column(readStringElement(parser, "name"), readColumnDataType(parser), readColumnNullable(parser))); break;
                 case "dependencies" : break;
                 case "dependency" : module.AddDependencyGroup(new DependencyGroup(new Dependency(readStringElement(parser, "name"), readDependencyOptional(parser))));
-                case "dependencyGroup" : break;
+                case "dependencyGroup" : module.AddDependencyGroup(readDependencyGroup(parser));
             }
         }
         return module;
