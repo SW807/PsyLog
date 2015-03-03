@@ -33,6 +33,9 @@ public class XMLParser {
                 case "table" : tables.add(new Table(readStringElement(parser, "name"))); break;
                 case "columns" : break;
                 case "column" : columns.add(new Column(readStringElement(parser, "name"), readColumnDataType(parser), readColumnNullable(parser))); break;
+                case "dependencies" : break;
+                case "dependency" : module.AddDependencyGroup(new DependencyGroup(new Dependency(readStringElement(parser, "name"), readDependencyOptional(parser))));
+                case "dependencyGroup" : break;
             }
         }
         return module;
@@ -79,7 +82,24 @@ public class XMLParser {
         return parser.getText() == "nullable";
     }
 
+    private Boolean readDependencyOptional(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
+        if (parser.next() == XmlPullParser.TEXT) {
+            return parser.getText() == "true";
+        }
+        return false;
+    }
 
+
+    private DependencyGroup readDependencyGroup(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
+        DependencyGroup dependencies = new DependencyGroup();
+        while (parser.getName() == "dependency") {
+            dependencies.Add(new Dependency(readStringElement(parser, "name"), readDependencyOptional(parser)));
+            parser.nextTag();
+        }
+        return dependencies;
+    }
 
 
     private String readStringElement(XmlPullParser parser, String element) throws IOException, XmlPullParserException {

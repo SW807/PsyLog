@@ -11,11 +11,4 @@ public class Column {
         this.type = type;
         this.nullable = nullable;
     }
-
-    public Column(String name, DataType type)
-    {
-        this.name = name;
-        this.type = type;
-        this.nullable = false;
-    }
 }
