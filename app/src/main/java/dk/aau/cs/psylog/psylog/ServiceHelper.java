@@ -26,26 +26,35 @@ import java.util.List;
 
 public class ServiceHelper {
 
+    private static String serviceName = ".PsyLogService";
+
     public static void startService(String processName, Context context) {
         Intent i = new Intent();
-        i.setComponent(new ComponentName(processName, processName + "Service"));
-        if (!isServiceRunning(processName + "Service", context)) {
+        i.setComponent(new ComponentName(processName, processName + serviceName));
+        if (!isServiceRunning(processName + serviceName, context)) {
             context.startService(i);
         }
     }
 
     public static void stopService(String processName, Context context) {
         Intent i = new Intent();
-        i.setComponent(new ComponentName(processName, processName + "Service"));
-        if (isServiceRunning(processName + "Service", context)) {
+        i.setComponent(new ComponentName(processName, processName + serviceName));
+        if (isServiceRunning(processName + serviceName, context)) {
             context.stopService(i);
         }
     }
 
-    public static boolean isServiceRunning(String serviceName, Context context) {
+    public static HashMap<String,Boolean> servicesRunning(Context context){
+        HashMap<String, Boolean> resultHash = new HashMap<String,Boolean>();
+        for(String s : getInstalledProcessNames(context)){
+            resultHash.put(s,isServiceRunning(s,context));
+        }
+    }
+
+    public static boolean isServiceRunning(String processName, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceName.equals(service.service.getClassName())) {
+            if ((processName + serviceName).equals(service.service.getClassName())) {
                 return true;
             }
         }
