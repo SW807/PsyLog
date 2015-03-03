@@ -11,11 +11,17 @@ import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 public class ServiceHelper {
@@ -46,6 +52,17 @@ public class ServiceHelper {
         return false;
     }
 
+    public static HashMap<String,String> getXMLForInstalledProcesses(Context context){
+        HashMap<String,String> resultHash = new HashMap<String,String>();
+        for(String s : getInstalledProcessNames(context)){
+            String temp = getProcessXMLDefinition(s,context);
+            if(temp != "")
+                resultHash.put(s,temp);
+        }
+
+        return resultHash;
+    }
+
     public static List<String> getInstalledProcessNames(Context context) {
         List<String> packageNames = new ArrayList<String>();
 
@@ -64,15 +81,18 @@ public class ServiceHelper {
         try {
             Resources r = context.getPackageManager().getResourcesForApplication(processName);
             int id = r.getIdentifier(processName + ":raw/module", null, null);
-            try {
-                InputStream in_s = r.openRawResource(id);
-                byte[] b = new byte[in_s.available()];
-                in_s.read(b);
-                s = new String(b);
-            } catch (IOException e) {
-            }
-
+            InputStream in_s = r.openRawResource(id);
+            byte[] b = new byte[in_s.available()];
+            in_s.read(b);
+            s = new String(b);
         } catch (PackageManager.NameNotFoundException e) {
+            Log.e("getProcessXMLDefinition", e.getMessage());
+        }
+        catch (IOException e) {
+            Log.e("getProcessXMLDefinition", e.getMessage());
+        }
+        catch(Resources.NotFoundException e){
+            Log.e("getProcessXMLDefinition", e.getMessage());
         }
 
         return s;
