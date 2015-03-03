@@ -2,11 +2,20 @@ package dk.aau.cs.psylog.psylog;
 
 public class Column {
     public final String name;
-    public final DataTypes type;
+    public final DataType type;
+    public final Boolean nullable;
 
-    public Column(String name, DataTypes type)
+    public Column(String name, DataType type, Boolean nullable)
     {
         this.name = name;
         this.type = type;
+        this.nullable = nullable;
+    }
+
+    public Column(String name, DataType type)
+    {
+        this.name = name;
+        this.type = type;
+        this.nullable = false;
     }
 }
