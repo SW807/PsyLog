@@ -63,11 +63,11 @@ public class ServiceHelper {
         return false;
     }
 
-    public static HashMap<String,String> getXMLForInstalledProcesses(Context context){
-        HashMap<String,String> resultHash = new HashMap<String,String>();
+    public static HashMap<String,InputStream> getXMLForInstalledProcesses(Context context){
+        HashMap<String,InputStream> resultHash = new HashMap<String,InputStream>();
         for(String s : getInstalledProcessNames(context)){
-            String temp = getProcessXMLDefinition(s,context);
-            if(temp != "")
+            InputStream temp = getProcessXMLDefinition(s,context);
+            if(temp != null)
                 resultHash.put(s,temp);
         }
 
@@ -87,25 +87,19 @@ public class ServiceHelper {
         return packageNames;
     }
 
-    public static String getProcessXMLDefinition(String processName, Context context) {
-        String s = "";
+    public static InputStream getProcessXMLDefinition(String processName, Context context) {
+        InputStream resultStream = null;
         try {
             Resources r = context.getPackageManager().getResourcesForApplication(processName);
             int id = r.getIdentifier(processName + ":raw/module", null, null);
-            InputStream in_s = r.openRawResource(id);
-            byte[] b = new byte[in_s.available()];
-            in_s.read(b);
-            s = new String(b);
+            resultStream = r.openRawResource(id);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("getProcessXMLDefinition", e.getMessage());
-        }
-        catch (IOException e) {
             Log.e("getProcessXMLDefinition", e.getMessage());
         }
         catch(Resources.NotFoundException e){
             Log.e("getProcessXMLDefinition", e.getMessage());
         }
 
-        return s;
+        return resultStream;
     }
 }
