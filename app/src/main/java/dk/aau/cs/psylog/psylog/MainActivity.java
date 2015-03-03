@@ -1,9 +1,14 @@
 package dk.aau.cs.psylog.psylog;
 
+import android.app.Service;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,6 +17,18 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        XMLParser parser = new XMLParser();
+        try {
+            parser.parse(ServiceHelper.getXMLForInstalledProcesses(this).get("dk.aau.cs.psylog.psylog_accelerometermodule"));
+        }
+        catch (XmlPullParserException e)
+        {
+            
+        }
+        catch (IOException e)
+        {
+
+        }
     }
 
 

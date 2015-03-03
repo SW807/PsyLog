@@ -18,9 +18,9 @@ public class Module {
         this.dependencies = new ArrayList<>();
     }
 
-    public void AddTable(Table table)
+    public void SetTables(ArrayList<Table> tables)
     {
-        this.tables.add(table);
+        this.tables = tables;
     }
 
     public void AddDependencyGroup(DependencyGroup dependencyGroup)
