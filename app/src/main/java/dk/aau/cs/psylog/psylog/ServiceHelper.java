@@ -26,18 +26,20 @@ import java.util.List;
 
 public class ServiceHelper {
 
+    private static String serviceName = ".PsyLogService";
+
     public static void startService(String processName, Context context) {
         Intent i = new Intent();
-        i.setComponent(new ComponentName(processName, processName + "Service"));
-        if (!isServiceRunning(processName + "Service", context)) {
+        i.setComponent(new ComponentName(processName, processName + serviceName));
+        if (!isServiceRunning(processName + serviceName, context)) {
             context.startService(i);
         }
     }
 
     public static void stopService(String processName, Context context) {
         Intent i = new Intent();
-        i.setComponent(new ComponentName(processName, processName + "Service"));
-        if (isServiceRunning(processName + "Service", context)) {
+        i.setComponent(new ComponentName(processName, processName + serviceName));
+        if (isServiceRunning(processName + serviceName, context)) {
             context.stopService(i);
         }
     }
