@@ -49,6 +49,8 @@ public class ServiceHelper {
         for(String s : getInstalledProcessNames(context)){
             resultHash.put(s,isServiceRunning(s,context));
         }
+
+        return resultHash;
     }
 
     public static boolean isServiceRunning(String processName, Context context) {
