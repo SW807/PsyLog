@@ -12,10 +12,12 @@ import java.util.List;
 
 public class XMLParser {
     private final String tag = "module";
+    private static final String NAMESPACE = null;
 
     private Module readModule(XmlPullParser parser) throws XmlPullParserException, IOException
     {
-        parser.require(XmlPullParser.START_TAG, ns, tag);
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, tag);
+        Module module = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -23,18 +25,18 @@ public class XMLParser {
             }
             String currentTag = parser.getName();
 
+            ArrayList<Table> tables = new ArrayList<>();
+            ArrayList<Column> columns = new ArrayList<>();
+
             switch (currentTag) {
                 case "tables" : break;
-                case "table" : readTableName(parser); break;
+                case "table" : tables.add(new Table(readStringElement(parser, "name"))); break;
                 case "columns" : break;
-                case "column" : readColumnSource(parser); break;
-
-            }
+                case "column" : columns.add(new Column(readStringElement(parser, "name"), readColumnDataType(parser), readColumnNullable(parser))); break;
             }
         }
+        return module;
     }
-
-    private static final String ns = null;
 
 
     public List parse(InputStream stream) throws XmlPullParserException, IOException
@@ -51,9 +53,9 @@ public class XMLParser {
     }
 
     private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List entries = new ArrayList();
+        List modules = new ArrayList();
 
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, "feed");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -61,40 +63,55 @@ public class XMLParser {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals(tag)) {
-                entries.add(readModule(parser));
+                modules.add(readModule(parser));
             }
             /*else {
                 skip(parser);
             }*/
         }
-        return entries;
+        return modules;
+    }
+
+
+
+    private Boolean readColumnNullable(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
+        return parser.getText() == "nullable";
     }
 
 
 
 
-    private String readColumnSource(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "source");
+    private String readStringElement(XmlPullParser parser, String element) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, element);
         String summary = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "source");
+        parser.require(XmlPullParser.END_TAG, NAMESPACE, element);
         return summary;
     }
 
-    private String readColumnText(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "source");
-        String summary = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "source");
-        return summary;
+
+    private DataType readColumnDataType(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, "type");
+        DataType type = readDataType(parser);
+        parser.require(XmlPullParser.END_TAG, NAMESPACE, "type");
+        return type;
     }
 
 
-
-    private String readTableName(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "name");
-        String summary = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "name");
-        return summary;
+    private DataType readDataType(XmlPullParser parser) throws IOException, XmlPullParserException
+    {
+        if (parser.next() == XmlPullParser.TEXT) {
+            switch (parser.getText()) {
+                case "integer": return DataType.integer;
+                case "real" : return DataType.real;
+                case "text" : return DataType.text;
+                case "blob" : return DataType.blob;
+                default: throw new ClassCastException("Wrong datattype in xml document");
+            }
+        }
+        return null;
     }
+
 
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
