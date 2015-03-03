@@ -8,16 +8,23 @@ public class Module {
     public final String name;
     public final String version;
     private List<Table> tables;
+    private List<DependencyGroup> dependencies;
 
     public Module(String name, String version)
     {
         this.name = name;
         this.version = version;
         tables = new ArrayList<Table>();
+        this.dependencies = new ArrayList<>();
     }
 
     public void AddTable(Table table)
     {
         this.tables.add(table);
+    }
+
+    public void AddDependencyGroup(DependencyGroup dependencyGroup)
+    {
+        this.dependencies.add(dependencyGroup);
     }
 }
