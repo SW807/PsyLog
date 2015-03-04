@@ -9,30 +9,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Generated("org.jsonschema2pojo")
-public class Column {
+public class Dependency {
 
-    private String Unit;
     private String name;
-    private String type;
+    private String version;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    /**
-     * 
-     * @return
-     *     The Unit
-     */
-    public String getUnit() {
-        return Unit;
-    }
-
-    /**
-     * 
-     * @param Unit
-     *     The _unit
-     */
-    public void setUnit(String Unit) {
-        this.Unit = Unit;
-    }
 
     /**
      * 
@@ -55,19 +36,19 @@ public class Column {
     /**
      * 
      * @return
-     *     The type
+     *     The version
      */
-    public String getType() {
-        return type;
+    public String getVersion() {
+        return version;
     }
 
     /**
      * 
-     * @param type
-     *     The type
+     * @param version
+     *     The version
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override
@@ -85,7 +66,7 @@ public class Column {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(Unit).append(name).append(type).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(name).append(version).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -93,11 +74,11 @@ public class Column {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Column) == false) {
+        if ((other instanceof Dependency) == false) {
             return false;
         }
-        Column rhs = ((Column) other);
-        return new EqualsBuilder().append(Unit, rhs.Unit).append(name, rhs.name).append(type, rhs.type).append(additionalProperties, rhs.additionalProperties).isEquals();
+        Dependency rhs = ((Dependency) other);
+        return new EqualsBuilder().append(name, rhs.name).append(version, rhs.version).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
