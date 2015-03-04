@@ -48,7 +48,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return readableDB.query(table, columns,selection,selectionArgs,groupBy,having,orderBy,limit);
     }
 
-    public void insertToDB(String table, String nullColumnHack, ContentValues values){
-        writableDB.insert(table,nullColumnHack,values);
+    public long insertToDB(String table, String nullColumnHack, ContentValues values){
+        return writableDB.insert(table,nullColumnHack,values);
     }
 }
