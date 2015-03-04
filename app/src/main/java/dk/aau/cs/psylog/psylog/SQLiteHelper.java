@@ -1,5 +1,6 @@
 package dk.aau.cs.psylog.psylog;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
@@ -41,5 +42,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + DUMMY_TABLE);
         onCreate(db);
+    }
+
+    public Cursor readFromDB(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit){
+        return readableDB.query(table, columns,selection,selectionArgs,groupBy,having,orderBy,limit);
+    }
+
+    public void insertToDB(String table, String nullColumnHack, ContentValues values){
+        writableDB.insert(table,nullColumnHack,values);
     }
 }
