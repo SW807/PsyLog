@@ -15,7 +15,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "database.db";
     private static final int DB_VERSION = 1;
-    private SQLiteDatabase db;
+    private SQLiteDatabase readableDB;
+    private SQLiteDatabase writableDB;
 
     public static final String DUMMY_COLUMN = "sometext";
     public static final String DUMMY_TABLE = "dummytable";
@@ -24,13 +25,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public SQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
-        db = getWritableDatabase();
+        writableDB = getWritableDatabase();
+        readableDB = getReadableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        this.db = db;
-        this.db.execSQL(DUMMY_SQL);
+        db.execSQL(DUMMY_SQL);
     }
 
     @Override
