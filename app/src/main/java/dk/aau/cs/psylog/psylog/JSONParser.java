@@ -4,11 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
+
+import java.io.InputStream;
 
 import dk.aau.cs.psylog.generated.Module;
-import dk.aau.cs.psylog.generated.Test;
 
 public class JSONParser {
 
@@ -18,7 +17,10 @@ public class JSONParser {
 
         try
         {
-            Test test = mapper.readValue("{\"mikael\":1,\"bruno\":1}",Test.class);
+            InputStream is = ServiceHelper.getXMLForInstalledProcesses(context)
+                    .get("dk.aau.cs.psylog.psylog_acceloremetermodule");
+
+            Module test = mapper.readValue(is, Module.class);
         }
         catch(Exception alt)
         {
