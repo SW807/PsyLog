@@ -1,6 +1,7 @@
 package dk.aau.cs.psylog.psylog;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,11 +19,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String DUMMY_COLUMN = "sometext";
     public static final String DUMMY_TABLE = "dummytable";
-    public static final String DUMMY_SQL = "create table" + DUMMY_TABLE + "(" + primary_key + " integer primary key autoincrement, " +
-                                                                                 DUMMY_COLUMN + " text not null=;";
+    public static final String DUMMY_SQL = "create table " + DUMMY_TABLE + " (" + primary_key + " integer primary key autoincrement, " +
+                                                                                 DUMMY_COLUMN + " text not null);";
     public SQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
+        db = getWritableDatabase();
     }
 
     @Override
@@ -38,11 +40,5 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + DUMMY_TABLE);
         onCreate(db);
-    }
-
-    //Er måske for åbent hvis man kan tilgå SQLiteHelper udefra
-    public void executeSQL(String sql)
-    {
-        db.execSQL(sql);
     }
 }
