@@ -2,12 +2,11 @@ package dk.aau.cs.psylog.psylog;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
-/**
- * Created by Mathias on 04-03-2015.
- */
 public class DBAccess extends ContentProvider{
 
     SQLiteHelper sqLiteHelper;
@@ -30,7 +29,7 @@ public class DBAccess extends ContentProvider{
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        sqLiteHelper.insertToDB(uri.getPath().replaceFirst("/",""),null,values);
+        sqLiteHelper.insertToDB(uri.getPath().replaceFirst("/", ""),null,values);
         return null;
     }
 
