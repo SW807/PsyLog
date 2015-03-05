@@ -1,6 +1,11 @@
 package dk.aau.cs.psylog.psylog;
 
 import android.app.Service;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +19,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("hej", "goddav");
+
         ServiceHelper.startService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
         JSONParser doAwesomeSTuff = new JSONParser(this);
     }
