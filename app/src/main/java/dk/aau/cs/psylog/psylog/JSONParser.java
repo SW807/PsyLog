@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.InputStream;
+import java.util.Scanner;
+
 import dk.aau.cs.psylog.generated.Module;
 
 public class JSONParser {
@@ -15,27 +18,10 @@ public class JSONParser {
 
         try
         {
-            //InputStream is = ServiceHelper.getXMLForInstalledProcesses(context)
-            //        .get("dk.aau.cs.psylog.psylog_acceloremetermodule");
+            InputStream is = ServiceHelper.getJSONForInstalledProcesses(context)
+                    .get("dk.aau.cs.psylog.psylog_accelerometermodule");
 
-            Module test = mapper.readValue("{\n" +
-                    "  \"name\": \"accelerometer\",\n" +
-                    "  \"_version\": 1.0,\n" +
-                    "  \"tables\": [\n" +
-                    "    {\n" +
-                    "      \"name\": \"data\",\n" +
-                    "      \"columns\": [\n" +
-                    "        { \"name\": \"accx\", \"dataType\": \"REAL\", \"_unit\": \"m/s\"},\n" +
-                    "        { \"name\": \"accy\", \"dataType\": \"REAL\", \"_unit\": \"m/s\"},\n" +
-                    "        { \"name\": \"accz\", \"dataType\": \"REAL\", \"_unit\": \"m/s\"}\n" +
-                    "      ]\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    "  \"dependencies\": [\n" +
-                    "    [{ \"name\": \"hardConstraint\" }],\n" +
-                    "    [{ \"name\": \"option1\" }, { \"name\": \"option2\" }]\n" +
-                    "  ]\n" +
-                    "}", Module.class);
+            Module test = mapper.readValue(is, Module.class);
             Log.d("test", test.getName());
         }
         catch(Exception alt)
