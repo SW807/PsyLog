@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
+import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
@@ -22,21 +22,21 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-
+@Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
     "name",
     "_version",
     "tables",
     "dependencies"
 })
-public class Module {
+public class Module_schema {
 
     @JsonProperty("name")
     private String name;
     @JsonProperty("_version")
-    private Double Version;
+    private Double _version;
     @JsonProperty("tables")
-    @JsonDeserialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Table> tables = new LinkedHashSet<Table>();
     @JsonProperty("dependencies")
     private List<Set<Dependency>> dependencies = new ArrayList<Set<Dependency>>();
@@ -64,21 +64,21 @@ public class Module {
     /**
      * 
      * @return
-     *     The Version
+     *     The _version
      */
     @JsonProperty("_version")
-    public Double getVersion() {
-        return Version;
+    public Double get_version() {
+        return _version;
     }
 
     /**
      * 
-     * @param Version
+     * @param _version
      *     The _version
      */
     @JsonProperty("_version")
-    public void setVersion(Double Version) {
-        this.Version = Version;
+    public void set_version(Double _version) {
+        this._version = _version;
     }
 
     /**
@@ -128,7 +128,7 @@ public class Module {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(name).append(Version).append(tables).append(dependencies).toHashCode();
+        return new HashCodeBuilder().append(name).append(_version).append(tables).append(dependencies).toHashCode();
     }
 
     @Override
@@ -136,11 +136,11 @@ public class Module {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Module) == false) {
+        if ((other instanceof Module_schema) == false) {
             return false;
         }
-        Module rhs = ((Module) other);
-        return new EqualsBuilder().append(name, rhs.name).append(Version, rhs.Version).append(tables, rhs.tables).append(dependencies, rhs.dependencies).isEquals();
+        Module_schema rhs = ((Module_schema) other);
+        return new EqualsBuilder().append(name, rhs.name).append(_version, rhs._version).append(tables, rhs.tables).append(dependencies, rhs.dependencies).isEquals();
     }
 
 }
