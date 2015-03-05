@@ -1,25 +1,37 @@
 
 package dk.aau.cs.psylog.generated;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+
+@JsonPropertyOrder({
+    "name",
+    "columns"
+})
 public class Table {
 
+    @JsonProperty("name")
     private String name;
-    private List<Column> columns = new ArrayList<Column>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @JsonProperty("columns")
+    @JsonDeserialize(as = LinkedHashSet.class)
+    private Set<Column> columns = new LinkedHashSet<Column>();
 
     /**
      * 
      * @return
      *     The name
      */
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -29,6 +41,7 @@ public class Table {
      * @param name
      *     The name
      */
+    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
@@ -38,7 +51,8 @@ public class Table {
      * @return
      *     The columns
      */
-    public List<Column> getColumns() {
+    @JsonProperty("columns")
+    public Set<Column> getColumns() {
         return columns;
     }
 
@@ -47,7 +61,8 @@ public class Table {
      * @param columns
      *     The columns
      */
-    public void setColumns(List<Column> columns) {
+    @JsonProperty("columns")
+    public void setColumns(Set<Column> columns) {
         this.columns = columns;
     }
 
@@ -56,17 +71,9 @@ public class Table {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(name).append(columns).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(name).append(columns).toHashCode();
     }
 
     @Override
@@ -78,7 +85,7 @@ public class Table {
             return false;
         }
         Table rhs = ((Table) other);
-        return new EqualsBuilder().append(name, rhs.name).append(columns, rhs.columns).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(name, rhs.name).append(columns, rhs.columns).isEquals();
     }
 
 }

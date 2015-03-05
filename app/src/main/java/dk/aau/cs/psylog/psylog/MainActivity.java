@@ -3,6 +3,7 @@ package dk.aau.cs.psylog.psylog;
 import android.app.Service;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +14,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("hej", "goddav");
         ServiceHelper.startService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
         JSONParser doAwesomeSTuff = new JSONParser(this);
     }
@@ -38,5 +40,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ServiceHelper.stopService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
+        super.onDestroy();
     }
 }

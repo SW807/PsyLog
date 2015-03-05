@@ -2,37 +2,63 @@
 package dk.aau.cs.psylog.generated;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+
+/**
+ * Module
+ * <p>
+ * 
+ * 
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+
+@JsonPropertyOrder({
+    "name",
+    "_version",
+    "tables",
+    "dependencies"
+})
 public class Module {
 
-    private String Name;
-    private String Version;
-    private List<Table> tables = new ArrayList<Table>();
-    private Dependencies dependencies;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("_version")
+    private Double Version;
+    @JsonProperty("tables")
+    @JsonDeserialize(as = LinkedHashSet.class)
+    private Set<Table> tables = new LinkedHashSet<Table>();
+    @JsonProperty("dependencies")
+    private List<Set<Dependency>> dependencies = new ArrayList<Set<Dependency>>();
 
     /**
      * 
      * @return
-     *     The Name
+     *     The name
      */
+    @JsonProperty("name")
     public String getName() {
-        return Name;
+        return name;
     }
 
     /**
      * 
-     * @param Name
-     *     The _name
+     * @param name
+     *     The name
      */
-    public void setName(String Name) {
-        this.Name = Name;
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -40,7 +66,8 @@ public class Module {
      * @return
      *     The Version
      */
-    public String getVersion() {
+    @JsonProperty("_version")
+    public Double getVersion() {
         return Version;
     }
 
@@ -49,7 +76,8 @@ public class Module {
      * @param Version
      *     The _version
      */
-    public void setVersion(String Version) {
+    @JsonProperty("_version")
+    public void setVersion(Double Version) {
         this.Version = Version;
     }
 
@@ -58,7 +86,8 @@ public class Module {
      * @return
      *     The tables
      */
-    public List<Table> getTables() {
+    @JsonProperty("tables")
+    public Set<Table> getTables() {
         return tables;
     }
 
@@ -67,7 +96,8 @@ public class Module {
      * @param tables
      *     The tables
      */
-    public void setTables(List<Table> tables) {
+    @JsonProperty("tables")
+    public void setTables(Set<Table> tables) {
         this.tables = tables;
     }
 
@@ -76,7 +106,8 @@ public class Module {
      * @return
      *     The dependencies
      */
-    public Dependencies getDependencies() {
+    @JsonProperty("dependencies")
+    public List<Set<Dependency>> getDependencies() {
         return dependencies;
     }
 
@@ -85,7 +116,8 @@ public class Module {
      * @param dependencies
      *     The dependencies
      */
-    public void setDependencies(Dependencies dependencies) {
+    @JsonProperty("dependencies")
+    public void setDependencies(List<Set<Dependency>> dependencies) {
         this.dependencies = dependencies;
     }
 
@@ -94,17 +126,9 @@ public class Module {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(Name).append(Version).append(tables).append(dependencies).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(name).append(Version).append(tables).append(dependencies).toHashCode();
     }
 
     @Override
@@ -116,7 +140,7 @@ public class Module {
             return false;
         }
         Module rhs = ((Module) other);
-        return new EqualsBuilder().append(Name, rhs.Name).append(Version, rhs.Version).append(tables, rhs.tables).append(dependencies, rhs.dependencies).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(name, rhs.name).append(Version, rhs.Version).append(tables, rhs.tables).append(dependencies, rhs.dependencies).isEquals();
     }
 
 }
