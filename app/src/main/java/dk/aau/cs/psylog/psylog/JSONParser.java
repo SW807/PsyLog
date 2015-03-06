@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import dk.aau.cs.psylog.generated.Column;
 import dk.aau.cs.psylog.generated.Module;
 import dk.aau.cs.psylog.generated.Table;
 
@@ -60,20 +61,34 @@ public class JSONParser {
         return  modules;
     }
 
-    private List<String> getTables(Module module)
-    {
-        List<String> l = new ArrayList<>();
-        for(Table t : module.getTables())
-            l.add(t.getName());
-        return l;
-    }
-
-    
-
-    private void createTables()
+    private void createModuleVersionTable()
     {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(context);
-        sqLiteHelper.createTable();
+        sqLiteHelper.createTable("Manager_ModuleVersions", new String[]{"Name", "Version"});
+    }
+
+    private void updateModuleVersions(String name, String version)
+    {
+
+    }
+
+    private boolean newVersion(Module module)
+    {
+
+        return true;
+    }
+
+    private void createTables(Module module)
+    {
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(context);
+
+        for(Table t : module.getTables())
+        {
+            List<String> l = new ArrayList<>();
+            for (Column c : t.getColumns())
+                l.add(c.getName() + " " + c.getDataType());
+            sqLiteHelper.createTable(t.getName(), l.toArray(new String[l.size()]));
+        }
     }
 
 }
