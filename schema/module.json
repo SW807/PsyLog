@@ -47,6 +47,9 @@
           "type": "string"
         },
         "dataType": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB" ]},
+        "nullable": {
+          "type": "boolean"
+        },
         "_unit": {
           "type": "string"
         }
