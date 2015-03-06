@@ -1,7 +1,10 @@
 package dk.aau.cs.psylog.psylog;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
+import java.sql.SQLDataException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,7 @@ public class Manager {
 
     private void createModuleVersionTable()
     {
-        sqLiteHelper.createTable("Manager_ModuleVersions", new String[]{"Name", "Version"});
+        sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)});
     }
 
     private void updateModuleVersions(String name, String version)
