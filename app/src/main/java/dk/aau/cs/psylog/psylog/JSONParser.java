@@ -3,21 +3,15 @@ package dk.aau.cs.psylog.psylog;
 import android.content.Context;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 
-import dk.aau.cs.psylog.generated.Column;
 import dk.aau.cs.psylog.generated.Module;
-import dk.aau.cs.psylog.generated.Table;
 
 public class JSONParser {
 
@@ -61,34 +55,6 @@ public class JSONParser {
         return  modules;
     }
 
-    private void createModuleVersionTable()
-    {
-        SQLiteHelper sqLiteHelper = new SQLiteHelper(context);
-        sqLiteHelper.createTable("Manager_ModuleVersions", new String[]{"Name", "Version"});
-    }
 
-    private void updateModuleVersions(String name, String version)
-    {
-
-    }
-
-    private boolean newVersion(Module module)
-    {
-
-        return true;
-    }
-
-    private void createTables(Module module)
-    {
-        SQLiteHelper sqLiteHelper = new SQLiteHelper(context);
-
-        for(Table t : module.getTables())
-        {
-            List<String> l = new ArrayList<>();
-            for (Column c : t.getColumns())
-                l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTable(t.getName(), l.toArray(new String[l.size()]));
-        }
-    }
 
 }
