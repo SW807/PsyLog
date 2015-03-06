@@ -27,7 +27,7 @@ public class Manager {
         sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)});
     }
 
-    private void updateModuleVersion(String name, double version) throws SQLDataException
+    private boolean updateModuleVersion(String name, double version) throws SQLDataException
     {
         Cursor cursor = sqLiteHelper.readFromDB(context.getString(R.string.Manager_ModuleVersionsTable), null, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name}, null, null, null, null);
         if (cursor.getCount() == 1)
@@ -49,6 +49,16 @@ public class Manager {
         }
         else
             throw new InternalError("Duplicate module in modules table - RIP Project");
+        return false;
+    }
+
+    private boolean sameVersion(String name, double newVersion)
+    {
+        double version = 0;
+        Cursor cursor = sqLiteHelper.readFromDB(context.getString(R.string.Manager_ModuleVersionsTable), null, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name}, null, null, null, null);
+        if (cursor.getCount() == 1)
+            version = cursor.getDouble(1);
+        return version == newVersion;
     }
 
     private void updateAllModuleVersions(List<Module> modules) throws SQLDataException
@@ -56,6 +66,8 @@ public class Manager {
         for(Module m : modules)
             updateModuleVersion(m.getName(), m.getVersion());
     }
+
+
 
     private boolean newVersion(Module module)
     {
