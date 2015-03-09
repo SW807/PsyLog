@@ -27,18 +27,15 @@ public class JSONParser {
 
     private Context context;
 
-    JSONParser(Context context)
-    {
+    JSONParser(Context context) {
         this.context = context;
     }
 
-    public ArrayList<Module> parse()
-    {
+    public ArrayList<Module> parse() {
         ArrayList<Module> modules = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, InputStream> processes = ServiceHelper.getJSONForInstalledProcesses(context);
-        for(InputStream is : processes.values())
-        {
+        for (InputStream is : processes.values()) {
             try {
                 modules.add(mapper.readValue(is, Module.class));
             }
@@ -46,7 +43,7 @@ public class JSONParser {
                 Log.e("JSONParser", e.getMessage());
             }
         }
-        return  modules;
+        return modules;
     }
 
     public boolean validate(InputStream jsonData, InputStream jsonSchema) {
