@@ -56,9 +56,4 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         query += ");";
         writableDB.execSQL(query);
     }
-
-    public void dropTable(String tableName)
-    {
-        writableDB.execSQL("DROP TABLE IF EXISTS " + tableName);
-    }
 }
