@@ -54,19 +54,17 @@ public class ModuleHelper {
         return version == newVersion;
     }
 
-    public void updateAllModules(ArrayList<Module> modules) throws SQLDataException
-    {
-        for(Module module : modules) {
-            if(!sameVersion(module.getName(), module.get_version()))
-            updateModuleVersion(module.getName(), module.get_version());
-            createTables(module);
+    public void updateAllModules(ArrayList<Module> modules) throws SQLDataException {
+        for (Module module : modules) {
+            if (!sameVersion(module.getName(), module.get_version())) {
+                updateModuleVersion(module.getName(), module.get_version());
+                createTables(module);
+            }
         }
     }
 
-    private void createTables(Module module)
-    {
-        for(Table t : module.getTables())
-        {
+    private void createTables(Module module) {
+        for (Table t : module.getTables()) {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
