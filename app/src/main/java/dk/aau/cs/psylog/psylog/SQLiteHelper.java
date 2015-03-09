@@ -38,8 +38,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return readableDB.query(table, columns,selection,selectionArgs,groupBy,having,orderBy,limit);
     }
 
-    public long insertToDB(String table, String nullColumnHack, ContentValues values){
-        return writableDB.insert(table,nullColumnHack,values);
+    public long insertToDB(String table, ContentValues values){
+        return writableDB.insert(table,null,values);
+    }
+
+    public int updateDB(String table,  ContentValues values, String whereClause, String[] whereArgs){
+        return writableDB.update(table, values, whereClause, whereArgs);
     }
 
     public void createTable(String tableName, String[] columns){
@@ -49,5 +53,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }
         query += ");";
         writableDB.execSQL(query);
+    }
+
+    public void dropTable(String tableName)
+    {
+        writableDB.execSQL("DROP TABLE IF EXISTS " + tableName);
     }
 }

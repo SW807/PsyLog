@@ -1,8 +1,35 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jsonschema2pojo'
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:latest.integration'
+    }
+}
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/services/com.fasterxml.jackson.core.JsonFactory'
+        exclude 'META-INF/services/com.fasterxml.jackson.core.ObjectCodec'
+    }
 
     defaultConfig {
         applicationId "dk.aau.cs.psylog.psylog"
@@ -22,5 +49,38 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.fasterxml.jackson.core:jackson-core:latest.integration'
+    compile 'com.fasterxml.jackson.core:jackson-databind:latest.integration'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:latest.integration'
+    compile 'org.apache.commons:commons-lang3:latest.integration'
+    compile 'javax.annotation:javax.annotation-api:latest.integration'
+}
+
+jsonSchema2Pojo {
+
+    // Location of the JSON Schema file(s). This may refer to a single file or a directory of files.
+    //source = files("${sourceSets.main.output.resourcesDir}/json")
+    source = files("${project.rootDir}/schema")
+
+    // Target directory for generated Java source files. The plugin will add this directory to the
+    // java source set so the compiler will find and compile the newly generated source files.
+    targetDirectory = file("${project.rootDir}/app/src/main/java")
+
+    // Package name used for generated Java classes (for types where a fully qualified name has not
+    // been supplied in the schema using the 'javaType' property).
+    targetPackage = 'dk.aau.cs.psylog.generated'
+
+    annotationStyle = 'jackson2'
+
+
+    // The type of input documents that will be read. Supported values:
+    //  - jsonschema (schema documents, containing formal rules that describe the structure of json data)
+    //  - json (documents that represent an example of the kind of json data that the generated Java types
+    //          will be mapped to)
+    sourceType = 'jsonschema'
+
+    // Whether to use commons-lang 3.x imports instead of commons-lang 2.x imports when adding equals,
+    // hashCode and toString methods.
+    useCommonsLang3 = true
 }

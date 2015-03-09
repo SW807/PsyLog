@@ -63,10 +63,10 @@ public class ServiceHelper {
         return false;
     }
 
-    public static HashMap<String,InputStream> getXMLForInstalledProcesses(Context context){
+    public static HashMap<String,InputStream> getJSONForInstalledProcesses(Context context){
         HashMap<String,InputStream> resultHash = new HashMap<String,InputStream>();
         for(String s : getInstalledProcessNames(context)){
-            InputStream temp = getProcessXMLDefinition(s,context);
+            InputStream temp = getProcessJSONDefinition(s,context);
             if(temp != null)
                 resultHash.put(s,temp);
         }
@@ -87,17 +87,17 @@ public class ServiceHelper {
         return packageNames;
     }
 
-    public static InputStream getProcessXMLDefinition(String processName, Context context) {
+    public static InputStream getProcessJSONDefinition(String processName, Context context) {
         InputStream resultStream = null;
         try {
             Resources r = context.getPackageManager().getResourcesForApplication(processName);
             int id = r.getIdentifier(processName + ":raw/module", null, null);
             resultStream = r.openRawResource(id);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("getProcessXMLDefinition", e.getMessage());
+            Log.e("getProcessJSONDef", e.getMessage());
         }
         catch(Resources.NotFoundException e){
-            Log.e("getProcessXMLDefinition", e.getMessage());
+            Log.e("getProcessJSONDef", e.getMessage());
         }
 
         return resultStream;
