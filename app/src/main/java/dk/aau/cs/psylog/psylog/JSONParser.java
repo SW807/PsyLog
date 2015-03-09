@@ -31,14 +31,15 @@ public class JSONParser {
         ArrayList<Module> modules = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, InputStream> processes = ServiceHelper.getJSONForInstalledProcesses(context);
-        for (InputStream is : processes.values()) {
+        for (String processName : processes.keySet()) {
             try {
-
-                boolean validJson = validate(is, context.getResources().openRawResource(R.raw.module));
+                InputStream json = processes.get(processName);
+                boolean validJson = validate(json, context.getResources().openRawResource(R.raw.module));
 
                 if (validJson)
-                    modules.add(mapper.readValue(is, Module.class));
-                else {}//Log.d("JSONParser", processes.values());
+                    modules.add(mapper.readValue(json, Module.class));
+                else
+                    Log.d("JSONParser", processName + " could not be validated towards the schema");
 
             } catch (IOException e) {
                 Log.e("JSONParser", e.getMessage());
