@@ -22,7 +22,7 @@ public class ModuleHelper {
         this.sqLiteHelper = new SQLiteHelper(context);
     }
 
-    private void createModuleVersionTable()
+    public void createModuleVersionTable()
     {
         sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)});
     }
@@ -61,18 +61,13 @@ public class ModuleHelper {
         return version == newVersion;
     }
 
-    private void updateAllModuleVersions(List<Module> modules) throws SQLDataException
+    public void updateAllModules(ArrayList<Module> modules) throws SQLDataException
     {
-        for(Module m : modules)
-            updateModuleVersion(m.getName(), m.getVersion());
-    }
-
-
-
-    private boolean newVersion(Module module)
-    {
-
-        return true;
+        for(Module module : modules) {
+            if(!sameVersion(module.getName(), module.getVersion()))
+            updateModuleVersion(module.getName(), module.getVersion());
+            createTables(module);
+        }
     }
 
     private void createTables(Module module)
