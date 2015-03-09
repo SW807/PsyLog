@@ -37,9 +37,14 @@ public class JSONParser {
         HashMap<String, InputStream> processes = ServiceHelper.getJSONForInstalledProcesses(context);
         for (InputStream is : processes.values()) {
             try {
-                modules.add(mapper.readValue(is, Module.class));
-            }
-            catch (IOException e) {
+
+                boolean validJson = validate(is, context.getResources().openRawResource(R.raw.module));
+
+                if (validJson)
+                    modules.add(mapper.readValue(is, Module.class));
+                else {}//Log.d("JSONParser", processes.values());
+
+            } catch (IOException e) {
                 Log.e("JSONParser", e.getMessage());
             }
         }
