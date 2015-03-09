@@ -20,8 +20,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ServiceHelper.startService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
-        JSONParser doAwesomeSTuff = new JSONParser(this);
+        Manager manager = new Manager(this);
+        manager.updateModules();
     }
 
 
