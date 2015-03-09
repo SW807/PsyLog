@@ -29,7 +29,7 @@ public class DBAccess extends ContentProvider{
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        sqLiteHelper.insertToDB(uri.getPath().replaceFirst("/", ""),null,values);
+        sqLiteHelper.insertToDB(uri.getPath().replaceFirst("/", ""),values);
         return null;
     }
 
