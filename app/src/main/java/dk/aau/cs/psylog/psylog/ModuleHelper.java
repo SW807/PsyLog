@@ -67,7 +67,7 @@ public class ModuleHelper {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTable(t.getName(), l.toArray(new String[l.size()]), true);
+            sqLiteHelper.createTable(module.getName() + "_" +  t.getName(), l.toArray(new String[l.size()]), true);
         }
     }
 }
