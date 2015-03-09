@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">PsyLog</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Indstillinger</string>
     <string name="Manager_ModuleVersionsTable">Manager_ModuleVersions</string>
     <string name="Manager_ModuleVersionsTable_NameColumn">Name</string>
     <string name="Manager_ModuleVersionsTable_VersionColumn">Version</string>
