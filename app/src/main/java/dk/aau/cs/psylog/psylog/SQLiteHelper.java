@@ -46,7 +46,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return writableDB.update(table, values, whereClause, whereArgs);
     }
 
-    public void createTable(String tableName, String[] columns){
+    public void createTable(String tableName, String[] columns, boolean dropTable){
+        if (dropTable)
+            writableDB.execSQL("DROP TABLE IF EXISTS " + tableName + ";");
         String query = "CREATE TABLE " + tableName + "( _id integer primary key autoincrement ";
         for(String s : columns){
             query += ", " + s;

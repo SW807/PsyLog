@@ -22,8 +22,7 @@ public class ModuleHelper {
     }
 
     public void createModuleVersionTable() {
-        sqLiteHelper.dropTable(context.getString(R.string.Manager_ModuleVersionsTable));
-        sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)});
+        sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " " + context.getString(R.string.SQLITE_Type_Text), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)+ " " + context.getString(R.string.SQLITE_Type_Real)}, true);
     }
 
     private boolean updateModuleVersion(String name, double version) throws SQLDataException {
@@ -68,7 +67,7 @@ public class ModuleHelper {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTable(t.getName(), l.toArray(new String[l.size()]));
+            sqLiteHelper.createTable(t.getName(), l.toArray(new String[l.size()]), true);
         }
     }
 }
