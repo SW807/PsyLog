@@ -32,7 +32,10 @@ import android.view.Window;
 import android.widget.ImageView;
 
 
+import java.util.ArrayList;
 import java.util.List;
+
+import dk.aau.cs.psylog.generated.Module;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -55,21 +58,30 @@ public class SettingsFragment extends PreferenceActivity{
         PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
         PreferenceCategory preferenceCategory = new PreferenceCategory(this);
-        preferenceCategory.setTitle("first title");
+        preferenceCategory.setTitle("Analyse Moduler");
         root.addPreference(preferenceCategory);
 
 
-        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
-        checkBoxPreference.setKey("allan");
-        checkBoxPreference.setChecked(true);
-        checkBoxPreference.setTitle("Fede Finn");
-        checkBoxPreference.setSummary("this is some checkbox");
-        checkBoxPreference.setEnabled(false);
-        preferenceCategory.addPreference(checkBoxPreference);
-
+        JSONParser parser = new JSONParser(this);
+        ArrayList<Module> modules = parser.parse();
+        for(Module module : modules)
+        {
+            preferenceCategory.addPreference(makePreference(module.getName(), module.getName(), "some summa", true, false));
+        }
 
         this.setPreferenceScreen(root);
 
+    }
+
+    public CheckBoxPreference makePreference(String key, String title, String summary, boolean enabled, boolean checked)
+    {
+        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
+        checkBoxPreference.setKey(key);
+        checkBoxPreference.setTitle(title);
+        checkBoxPreference.setSummary(summary);
+        checkBoxPreference.setEnabled(enabled);
+        checkBoxPreference.setChecked(checked);
+        return  checkBoxPreference;
     }
 
 }
