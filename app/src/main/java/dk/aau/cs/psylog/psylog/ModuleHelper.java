@@ -16,44 +16,37 @@ public class ModuleHelper {
     private Context context;
     private SQLiteHelper sqLiteHelper;
 
-    public ModuleHelper(Context context)
-    {
+    public ModuleHelper(Context context) {
         this.context = context;
         this.sqLiteHelper = new SQLiteHelper(context);
     }
 
-    public void createModuleVersionTable()
-    {
+    public void createModuleVersionTable() {
+        sqLiteHelper.dropTable(context.getString(R.string.Manager_ModuleVersionsTable));
         sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)});
     }
 
-    private boolean updateModuleVersion(String name, double version) throws SQLDataException
-    {
+    private boolean updateModuleVersion(String name, double version) throws SQLDataException {
         Cursor cursor = sqLiteHelper.readFromDB(context.getString(R.string.Manager_ModuleVersionsTable), null, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name}, null, null, null, null);
-        if (cursor.getCount() == 1)
-        {
+        if (cursor.getCount() == 1) {
             ContentValues cv = new ContentValues();
-            cv.put(context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn),version);
+            cv.put(context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn), version);
             int affected = sqLiteHelper.updateDB(context.getString(R.string.Manager_ModuleVersionsTable), cv, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name});
-            if(affected != 1)
+            if (affected != 1)
                 throw new InternalError("Duplicate module in modules table - RIP Project");
-        }
-        else if (cursor.getCount() == 0)
-        {
+        } else if (cursor.getCount() == 0) {
             ContentValues cv = new ContentValues();
-            cv.put(context.getString(R.string.Manager_ModuleVersionsTable_NameColumn),name);
-            cv.put(context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn),version);
-            long id = sqLiteHelper.insertToDB(context.getString(R.string.Manager_ModuleVersionsTable),cv);
-            if(id == -1)
+            cv.put(context.getString(R.string.Manager_ModuleVersionsTable_NameColumn), name);
+            cv.put(context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn), version);
+            long id = sqLiteHelper.insertToDB(context.getString(R.string.Manager_ModuleVersionsTable), cv);
+            if (id == -1)
                 throw new SQLDataException("Row could not be inserted");
-        }
-        else
+        } else
             throw new InternalError("Duplicate module in modules table - RIP Project");
         return false;
     }
 
-    private boolean sameVersion(String name, double newVersion)
-    {
+    private boolean sameVersion(String name, double newVersion) {
         double version = 0;
         Cursor cursor = sqLiteHelper.readFromDB(context.getString(R.string.Manager_ModuleVersionsTable), null, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name}, null, null, null, null);
         if (cursor.getCount() == 1)
