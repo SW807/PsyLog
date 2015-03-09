@@ -64,8 +64,8 @@ public class ModuleHelper {
     public void updateAllModules(ArrayList<Module> modules) throws SQLDataException
     {
         for(Module module : modules) {
-            if(!sameVersion(module.getName(), module.getVersion()))
-            updateModuleVersion(module.getName(), module.getVersion());
+            if(!sameVersion(module.getName(), module.get_version()))
+            updateModuleVersion(module.getName(), module.get_version());
             createTables(module);
         }
     }
