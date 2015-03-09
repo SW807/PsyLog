@@ -4,6 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="Manager_ModuleVersionsTable">Manager_ModuleVersions</string>
-    <string name="Manager_ModuleVersionsTable_NameColumn">Name TEXT</string>
-    <string name="Manager_ModuleVersionsTable_VersionColumn">Version REAL</string>
+    <string name="Manager_ModuleVersionsTable_NameColumn">Name</string>
+    <string name="Manager_ModuleVersionsTable_VersionColumn">Version</string>
+    <string name="SQLITE_Type_Text">TEXT</string>
+    <string name="SQLITE_Type_Real">REAL</string>
 </resources>
