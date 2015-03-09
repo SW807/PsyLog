@@ -55,6 +55,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:latest.integration'
     compile 'org.apache.commons:commons-lang3:latest.integration'
     compile 'javax.annotation:javax.annotation-api:latest.integration'
+    compile(group: "com.github.fge", name: "json-schema-validator", version: "2.2.6");
 }
 
 jsonSchema2Pojo {
