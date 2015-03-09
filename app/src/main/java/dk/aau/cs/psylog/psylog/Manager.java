@@ -1,26 +1,33 @@
 package dk.aau.cs.psylog.psylog;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
+import android.util.Log;
 
 import java.sql.SQLDataException;
 import java.util.ArrayList;
-import java.util.List;
 
-import dk.aau.cs.psylog.generated.Column;
 import dk.aau.cs.psylog.generated.Module;
-import dk.aau.cs.psylog.generated.Table;
+
 
 public class Manager {
+    private JSONParser jsonParser;
+    private ModuleHelper moduleHelper;
 
-    private Context context;
-    private SQLiteHelper sqLiteHelper;
     public Manager(Context context)
     {
-        this.context = context;
-        this.sqLiteHelper = new SQLiteHelper(context);
+        this.jsonParser = new JSONParser(context);
+        this.moduleHelper = new ModuleHelper(context);
+        moduleHelper.createModuleVersionTable();
     }
 
-
+    public void updateModules()
+    {
+        ArrayList<Module> modules =  jsonParser.parse();
+        try {
+            moduleHelper.updateAllModules(modules);
+        }
+        catch (SQLDataException e) {
+            Log.e("DB", e.getMessage());
+        }
+    }
 }
