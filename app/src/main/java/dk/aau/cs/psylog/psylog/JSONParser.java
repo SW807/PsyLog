@@ -20,27 +20,11 @@ public class JSONParser {
     JSONParser(Context context)
     {
         this.context = context;
-        ObjectMapper mapper = new ObjectMapper();
-
-        try
-        {
-            InputStream is = ServiceHelper.getJSONForInstalledProcesses(context)
-                    .get("dk.aau.cs.psylog.psylog_accelerometermodule");
-
-            Module test = mapper.readValue(is, Module.class);
-            Log.d("test", test.getName());
-            test.getTables();
-        }
-        catch(Exception alt)
-        {
-            Log.d("sick",alt.getMessage());
-        }
-
     }
 
-    private List<Module> parse()
+    public ArrayList<Module> parse()
     {
-        List<Module> modules = new ArrayList<>();
+        ArrayList<Module> modules = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, InputStream> processes = ServiceHelper.getJSONForInstalledProcesses(context);
         for(InputStream is : processes.values())
