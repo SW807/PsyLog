@@ -31,7 +31,7 @@ public class ServiceHelper {
     public static void startService(String processName, Context context) {
         Intent i = new Intent();
         i.setComponent(new ComponentName(processName, processName + serviceName));
-        if (!isServiceRunning(processName + serviceName, context)) {
+        if (!isServiceRunning(processName, context)) {
             context.startService(i);
         }
     }
@@ -39,7 +39,7 @@ public class ServiceHelper {
     public static void stopService(String processName, Context context) {
         Intent i = new Intent();
         i.setComponent(new ComponentName(processName, processName + serviceName));
-        if (isServiceRunning(processName + serviceName, context)) {
+        if (isServiceRunning(processName, context)) {
             context.stopService(i);
         }
     }

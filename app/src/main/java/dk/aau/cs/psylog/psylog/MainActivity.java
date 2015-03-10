@@ -1,17 +1,8 @@
 package dk.aau.cs.psylog.psylog;
 
-import android.app.Service;
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -22,7 +13,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);;
+   //     ServiceHelper.startService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
 
         Manager manager = new Manager(this);
         manager.updateModules();
@@ -41,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
     {/*
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 new SettingsFragment()).commit();*/
-        Intent intent = new Intent(this, SettingsFragment.class);
+        Intent intent = new Intent(this, SettingsActivity.class);
 
         startActivity(intent);
     }
