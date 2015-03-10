@@ -30,13 +30,19 @@ public class JSONParser {
         for(InputStream is : processes.values())
         {
             try {
-                modules.add(mapper.readValue(is, Module.class));
+                if(isValid(is)) modules.add(mapper.readValue(is, Module.class));
             }
             catch (IOException e) {
                 Log.e("JSONParser", e.getMessage());
             }
         }
         return  modules;
+    }
+
+
+    private boolean isValid(InputStream json){
+        InputStream schema;
+        return true;
     }
 
 
