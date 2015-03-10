@@ -29,6 +29,7 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/services/com.fasterxml.jackson.core.JsonFactory'
         exclude 'META-INF/services/com.fasterxml.jackson.core.ObjectCodec'
+        exclude 'LICENSE'
     }
 
     defaultConfig {
@@ -55,13 +56,14 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:latest.integration'
     compile 'org.apache.commons:commons-lang3:latest.integration'
     compile 'javax.annotation:javax.annotation-api:latest.integration'
+    compile(group: "com.github.fge", name: "json-schema-validator", version: "2.0.4");
 }
 
 jsonSchema2Pojo {
 
     // Location of the JSON Schema file(s). This may refer to a single file or a directory of files.
     //source = files("${sourceSets.main.output.resourcesDir}/json")
-    source = files("${project.rootDir}/schema")
+    source = files("${project.rootDir}/app/src/main/res/raw")
 
     // Target directory for generated Java source files. The plugin will add this directory to the
     // java source set so the compiler will find and compile the newly generated source files.
