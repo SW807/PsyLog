@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Module",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/definitions/sensor" },
+    { "$ref": "#/definitions/analysis" },
+    { "$ref": "#/definitions/view" }
+  ],
+  "definitions": {
+    "sensor": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "_version": {
+          "type": "number",
+          "minimum": 0.0,
+          "exclusiveMinimum": true
+        },
+        "_type": { "enum": ["sensor"] },
+        "tables": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/table" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": ["name", "_version", "_type", "tables"]
+    },
+    "analysis": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "_version": {
+          "type": "number",
+          "minimum": 0.0,
+          "exclusiveMinimum": true
+        },
+        "_type": { "enum": ["analysis"] },
+        "tables": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/table" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "array", "items": { "$ref": "#/definitions/dependency" }, "minItems": 1, "uniqueItems": true }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["name", "_version", "_type", "tables"]
+    },
+    "view": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "_version": {
+          "type": "number",
+          "minimum": 0.0,
+          "exclusiveMinimum": true
+        },
+        "_type": { "enum": ["view"] },
+        "fragments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/fragment" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": ["name", "_version", "_type", "fragments"]
+    },
+    "table": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/column" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "name", "columns" ]
+    },
+    "column": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "dataType": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB" ]},
+        "nullable": {
+          "type": "boolean"
+        },
+        "_unit": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "name", "dataType"]
+    },
+    "dependency": {
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "additionalProperties": false,
+      "required": [ "name" ]
+    },
+    "fragment": {
+      "properties": {
+        "name": { "type": "string" },
+        "layoutFile": { "type": "string" },
+        "viewData": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/viewData" }
+        }
+      },
+      "additionalProperties": false,
+      "required": [ "name", "layoutFile", "viewData" ]
+    },
+    "viewData": {
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB" ] }
+      }
+    }
+  }
+}
