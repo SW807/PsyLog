@@ -56,4 +56,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         query += ");";
         writableDB.execSQL(query);
     }
+
+    public void createTableWithTime(String tableName, String[] columns, boolean dropTable){
+        if (dropTable)
+            writableDB.execSQL("DROP TABLE IF EXISTS " + tableName + ";");
+        String query = "CREATE TABLE " + tableName + "( _id integer primary key autoincrement ";
+        for(String s : columns){
+            query += ", " + s;
+        }
+        query += ", time TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+        query += ");";
+        writableDB.execSQL(query);
+    }
 }
