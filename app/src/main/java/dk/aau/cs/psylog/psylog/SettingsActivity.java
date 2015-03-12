@@ -72,7 +72,7 @@ public class SettingsActivity extends PreferenceActivity {
             Preference pref = new Preference(this);
             String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
             pref.setKey(modName);
-            dicModules.get(modName).getOnPreferenceChangeListener().onPreferenceChange(pref, false);
+            dicModules.get(modName).getOnPreferenceChangeListener().onPreferenceChange(pref, entry.getValue());
         }
 
         for (CheckBoxPreference value : dicModules.values()) {
