@@ -12,6 +12,7 @@ import java.util.List;
 import dk.aau.cs.psylog.generated.Column;
 import dk.aau.cs.psylog.generated.Module;
 import dk.aau.cs.psylog.generated.Table;
+import dk.aau.cs.psylog.module_lib.DBAccessContract;
 
 public class ModuleHelper {
     private Context context;
@@ -74,7 +75,7 @@ public class ModuleHelper {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTableWithTime(t.getName(), l.toArray(new String[l.size()]), true);
+            sqLiteHelper.createTableWithTime(DBAccessContract.PACKAGE_NAME +  t.getName(), l.toArray(new String[l.size()]), true);
         }
     }
 }
