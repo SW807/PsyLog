@@ -75,7 +75,7 @@ public class ModuleHelper {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTableWithTime(DBAccessContract.PACKAGE_NAME +  t.getName(), l.toArray(new String[l.size()]), true);
+            sqLiteHelper.createTableWithTime(PsyLogConstants.PACKAGE_NAME +  t.getName(), l.toArray(new String[l.size()]), true);
         }
     }
 }
