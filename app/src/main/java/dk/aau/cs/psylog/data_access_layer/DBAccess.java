@@ -20,7 +20,7 @@ public class DBAccess extends ContentProvider{
         return sqLiteHelper.readFromDB(tableFromUri(uri),projection,selection,selectionArgs,null,null,sortOrder,null);
     }
 
-    @Override   
+    @Override
     public String getType(Uri uri) {
         return null;
     }
