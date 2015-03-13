@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import dk.aau.cs.psylog.generated.Dependency;
-import dk.aau.cs.psylog.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.JSONParser;
+import dk.aau.cs.psylog.data_access_layer.generated.Dependency;
+import dk.aau.cs.psylog.data_access_layer.generated.Module;
 
 public class SettingsActivity extends PreferenceActivity {
 

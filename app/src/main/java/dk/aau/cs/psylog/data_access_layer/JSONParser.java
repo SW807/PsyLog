@@ -1,4 +1,4 @@
-package dk.aau.cs.psylog.psylog;
+package dk.aau.cs.psylog.data_access_layer;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,15 +9,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import dk.aau.cs.psylog.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.psylog.ServiceHelper;
 
 public class JSONParser {
 
     private Context context;
 
-    JSONParser(Context context)
+    public JSONParser(Context context)
     {
         this.context = context;
     }
