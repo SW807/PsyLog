@@ -69,7 +69,7 @@ jsonSchema2Pojo {
 
     // Package name used for generated Java classes (for types where a fully qualified name has not
     // been supplied in the schema using the 'javaType' property).
-    targetPackage = 'dk.aau.cs.psylog.generated'
+    targetPackage = 'dk.aau.cs.psylog.data_access_layer.generated'
 
     annotationStyle = 'jackson2'
 
