@@ -43,18 +43,16 @@ public class SettingsActivity extends PreferenceActivity {
     final HashMap<String, CheckBoxPreference> dicModules = new HashMap<String, CheckBoxPreference>();
 
     private void initSettings() {
+
         PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
         PreferenceCategory preferenceCategory = new PreferenceCategory(this);
         preferenceCategory.setTitle("Analyse Moduler");
         root.addPreference(preferenceCategory);
 
-        JSONParser parser = new JSONParser(this);
-        ArrayList<Module> modules = parser.parse();
+        ArrayList<Module> modules = loadModules();
 
 
-        for (Module module : modules) {
-            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), "some summa", true, false));
         }
 
         for (Module module : modules) {
@@ -82,6 +80,20 @@ public class SettingsActivity extends PreferenceActivity {
         }
         this.setPreferenceScreen(root);
 
+    /**
+     * Loads installed modules and creates an enabled unchecked checkbox for each.
+     *
+     * @return an arraylist of all modules
+     */
+    private ArrayList<Module> loadModules() {
+        JSONParser parser = new JSONParser(this);
+        ArrayList<Module> modules = parser.parse();
+
+
+        for (Module module : modules) {
+            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), "some summa", true, false));
+        }
+        return modules;
     }
 
     private Preference.OnPreferenceChangeListener getOnPreferenceChangeListener(final List<Pair<Module, Set<Dependency>>> dependencySet) {
