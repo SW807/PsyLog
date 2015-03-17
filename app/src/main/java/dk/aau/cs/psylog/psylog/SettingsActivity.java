@@ -74,6 +74,7 @@ public class SettingsActivity extends PreferenceActivity {
             if (!dicModules.isEmpty())
                 dicModules.get(modName).getOnPreferenceChangeListener().onPreferenceChange(pref, entry.getValue());
         }
+    }
 
     private void resolveDependencies(ArrayList<Module> modules) {
         for (Module module : modules) {
@@ -86,30 +87,8 @@ public class SettingsActivity extends PreferenceActivity {
 
             dicModules.get(module.getName()).setOnPreferenceChangeListener(getOnPreferenceChangeListener(dependencySet));
         }
-        for (Map.Entry<String, Boolean> entry : ServiceHelper.servicesRunning(this).entrySet()) {
-            Preference pref = new Preference(this);
-            String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
-            pref.setKey(modName);
-            dicModules.get(modName).getOnPreferenceChangeListener().onPreferenceChange(pref, entry.getValue());
-        }
+    }
 
-        for (CheckBoxPreference value : dicModules.values()) {
-            preferenceCategory.addPreference(value);
-        }
-        this.setPreferenceScreen(root);
-
-    /**
-     * Loads installed modules and creates an enabled unchecked checkbox for each.
-     *
-     * @return an arraylist of all modules
-     */
-    private ArrayList<Module> loadModules() {
-        JSONParser parser = new JSONParser(this);
-        ArrayList<Module> modules = parser.parse();
-
-
-        for (Module module : modules) {
-            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), "some summa", true, false));
     /**
      * inserts dependency to the set of dependencies if module is dependent on it
      *
@@ -123,6 +102,21 @@ public class SettingsActivity extends PreferenceActivity {
                 if (dp.getName().equals(dependency.getName()))
                     dependencySet.add(new Pair<>(module, dpSet));
             }
+        }
+    }
+
+    /**
+     * Loads installed modules and creates an enabled unchecked checkbox for each.
+     *
+     * @return an arraylist of all modules
+     */
+    private ArrayList<Module> loadModules() {
+        JSONParser parser = new JSONParser(this);
+        ArrayList<Module> modules = parser.parse();
+
+
+        for (Module module : modules) {
+            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), "some summa", true, false));
         }
         return modules;
     }
@@ -161,15 +155,6 @@ public class SettingsActivity extends PreferenceActivity {
         return this;
     }
 
-    private Set<Dependency> containsString(List<Set<Dependency>> dependencies, String name) {
-        for (Set<Dependency> dpSet : dependencies) {
-            for (Dependency dp : dpSet) {
-                if (dp.getName().equals(name))
-                    return dpSet;
-            }
-        }
-        return null;
-    }
 
     private CheckBoxPreference makePreference(String key, String title, String summary, boolean enabled, boolean checked) {
         CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
