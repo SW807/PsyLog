@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
+import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 import dk.aau.cs.psylog.psylog.ServiceHelper;
 
 public class JSONParser {
@@ -27,10 +30,15 @@ public class JSONParser {
         ArrayList<Module> modules = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, InputStream> processes = ServiceHelper.getJSONForInstalledProcesses(context);
-        for(InputStream is : processes.values())
+        for(Map.Entry<String, InputStream> is : processes.entrySet())
         {
             try {
-                if(isValid(is)) modules.add(mapper.readValue(is, Module.class));
+                if(isValid(is.getValue())) {
+                    if (is.getKey().startsWith("dk.aau.cs.psylog.sensor"))
+                        modules.add(mapper.readValue(is.getValue(), SensorModule.class));
+                    else if (is.getKey().startsWith("dk.aau.cs.psylog.analysis"))
+                        modules.add(mapper.readValue(is.getValue(), AnalysisModule.class));
+                }
             }
             catch (IOException e) {
                 Log.e("JSONParser", e.getMessage());
