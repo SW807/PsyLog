@@ -61,10 +61,7 @@ public class SettingsActivity extends PreferenceActivity {
             final List<Pair<Module, Set<Dependency>>> dependencySet = new ArrayList<>();
             for (Module module2 : modules) {
                 if (!module.getName().equals(module2.getName())) {
-                    Set<Dependency> res = containsString(module2.getDependencies(), module.getName());
-                    if (res != null) {
-                        dependencySet.add(new Pair<>(module2, res));
-                    }
+                    insertDependency(module2, module, dependencySet);
                 }
             }
 
@@ -94,6 +91,19 @@ public class SettingsActivity extends PreferenceActivity {
 
         for (Module module : modules) {
             dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), "some summa", true, false));
+    /**
+     * inserts dependency to the set of dependencies if module is dependent on it
+     *
+     * @param module
+     * @param dependency
+     * @param dependencySet
+     */
+    private void insertDependency(Module module, Module dependency, List<Pair<Module, Set<Dependency>>> dependencySet) {
+        for (Set<Dependency> dpSet : module.getDependencies()) {
+            for (Dependency dp : dpSet) {
+                if (dp.getName().equals(dependency.getName()))
+                    dependencySet.add(new Pair<>(module, dpSet));
+            }
         }
         return modules;
     }
