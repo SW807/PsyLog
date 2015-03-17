@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dk.aau.cs.psylog.PsyLogConstants;
 import dk.aau.cs.psylog.data_access_layer.JSONParser;
 import dk.aau.cs.psylog.data_access_layer.generated.Dependency;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
@@ -32,9 +33,9 @@ public class SettingsActivity extends PreferenceActivity {
         super.onPause();
         for (Map.Entry<String, CheckBoxPreference> cbf : dicModules.entrySet()) {
             if (cbf.getValue().isChecked()) {
-                ServiceHelper.startService("dk.aau.cs.psylog." + cbf.getKey(), this);
+                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + cbf.getKey(), this);
             } else {
-                ServiceHelper.stopService("dk.aau.cs.psylog." + cbf.getKey(), this);
+                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + cbf.getKey(), this);
             }
         }
     }
