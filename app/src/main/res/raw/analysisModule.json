@@ -48,10 +48,11 @@
     },
     "dependency": {
       "properties": {
-        "name": { "type": "string" }
+        "name": { "type": "string" },
+        "version": { "type": "number", "minimum": 0.0, "exclusiveMinimum": true }
       },
       "additionalProperties": false,
-      "required": [ "name" ]
+      "required": [ "name", "version" ]
     }
   }
 }
