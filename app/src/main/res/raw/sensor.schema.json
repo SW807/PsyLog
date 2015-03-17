@@ -2,13 +2,8 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "SensorModule",
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.SensorModule",
+  "extends": { "$ref": "module.schema.json" },
   "properties": {
-    "name": { "type": "string" },
-    "_version": {
-      "type": "number",
-      "minimum": 0.0,
-      "exclusiveMinimum": true
-    },
     "tables": {
       "type": "array",
       "items": { "$ref": "table.schema.json" },
@@ -17,7 +12,6 @@
     }
   },
   "additionalProperties": false,
-  "required": [ "name", "_version" ],
   "definitions": {
     "table": {
       "properties": {

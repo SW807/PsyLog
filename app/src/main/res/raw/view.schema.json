@@ -3,13 +3,8 @@
   "title": "ViewModule",
   "type": "object",
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.ViewModule",
+  "extends": { "$ref": "module.schema.json" },
   "properties": {
-    "name": { "type": "string" },
-    "_version": {
-      "type": "number",
-      "minimum": 0.0,
-      "exclusiveMinimum": true
-    },
     "view": {
       "type": "object",
       "properties": {
@@ -21,8 +16,7 @@
           "uniqueItems": true
         }
       },
-      "additionalProperties": false,
-      "required": ["layout", "viewData"]
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,

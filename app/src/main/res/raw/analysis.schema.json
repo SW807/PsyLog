@@ -3,13 +3,8 @@
   "title": "AnalysisModule",
   "type": "object",
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule",
+  "extends": { "$ref": "module.schema.json" },
   "properties": {
-    "name": { "type": "string" },
-    "_version": {
-      "type": "number",
-      "minimum": 0.0,
-      "exclusiveMinimum": true
-    },
     "tables": {
       "type": "array",
       "items": { "$ref": "table.schema.json" },
@@ -22,7 +17,6 @@
     }
   },
   "additionalProperties": false,
-  "required": [ "name", "_version" ],
   "definitions": {
     "dependency": {
       "properties": {
