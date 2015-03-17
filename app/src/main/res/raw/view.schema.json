@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "ViewModule",
   "type": "object",
+  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.ViewModule",
   "properties": {
     "name": { "type": "string" },
     "_version": {
@@ -13,21 +14,21 @@
       "type": "object",
       "properties": {
         "layout": { "type": "string", "pattern": "^[a-zA-Z0-9]+(.xml)" },
-        "data": {
+        "viewData": {
           "type": "array",
-          "items": { "$ref": "#/definitions/data" },
+          "items": { "$ref": "#/definitions/viewData" },
           "minItems": 1,
           "uniqueItems": true
         }
       },
       "additionalProperties": false,
-      "required": ["layout", "data"]
+      "required": ["layout", "viewData"]
     }
   },
   "additionalProperties": false,
   "required": [ "name", "_version" ],
   "definitions": {
-    "data": {
+    "viewData": {
       "properties": {
         "name": { "type": "string" },
         "dataTypes": { "type": "array", "items": { "enum": ["INTEGER", "REAL", "TEXT", "BLOB"] }, "uniqueItems":true, "minItems": 1 },

@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "table",
+  "type": "object",
+  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.Table",
+  "properties": {
+    "name": { "type": "string" },
+    "columns": {
+      "type": "array",
+      "items": { "$ref": "column.schema.json" },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false,
+  "required": [ "name", "columns" ]
+}

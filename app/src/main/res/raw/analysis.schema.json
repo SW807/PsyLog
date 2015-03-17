@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "AnalysisModule",
   "type": "object",
+  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule",
   "properties": {
     "name": { "type": "string" },
     "_version": {
@@ -11,7 +12,7 @@
     },
     "tables": {
       "type": "array",
-      "items": { "$ref": "#/definitions/table" },
+      "items": { "$ref": "table.schema.json" },
       "minItems": 1,
       "uniqueItems": true
     },
@@ -23,29 +24,6 @@
   "additionalProperties": false,
   "required": [ "name", "_version" ],
   "definitions": {
-    "table": {
-      "properties": {
-        "name": { "type": "string" },
-        "columns": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/column" },
-          "minItems": 1,
-          "uniqueItems": true
-        }
-      },
-      "additionalProperties": false,
-      "required": [ "name", "columns" ]
-    },
-    "column": {
-      "properties": {
-        "name": { "type": "string" },
-        "dataType": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB" ]},
-        "nullable": { "type": "boolean" },
-        "_unit": { "type": "string" }
-      },
-      "additionalProperties": false,
-      "required": [ "name", "dataType"]
-    },
     "dependency": {
       "properties": {
         "name": { "type": "string" },

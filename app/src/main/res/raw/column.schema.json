@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "column",
+  "type": "object",
+  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.Column",
+  "properties": {
+    "name": { "type": "string" },
+    "dataType": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB" ]},
+    "nullable": { "type": "boolean" },
+    "_unit": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "required": [ "name", "dataType"]
+}
