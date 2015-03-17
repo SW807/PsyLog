@@ -8,10 +8,13 @@ import java.sql.SQLDataException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import dk.aau.cs.psylog.PsyLogConstants;
+import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Column;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Table;
 import dk.aau.cs.psylog.psylog.R;
 
@@ -72,7 +75,15 @@ public class ModuleHelper {
     }
 
     private void createTables(Module module) {
-        for (Table t : module.getTables()) {
+        Set<Table> tables;
+        if (module instanceof AnalysisModule)
+            tables = ((AnalysisModule) module).getTables();
+        else if (module instanceof SensorModule)
+            tables = ((SensorModule) module).getTables();
+        else
+            return;
+
+        for (Table t : tables) {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());

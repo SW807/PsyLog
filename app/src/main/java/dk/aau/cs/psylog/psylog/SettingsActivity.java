@@ -17,14 +17,18 @@ import java.util.Set;
 
 import dk.aau.cs.psylog.PsyLogConstants;
 import dk.aau.cs.psylog.data_access_layer.JSONParser;
+import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Dependency;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 
 public class SettingsActivity extends PreferenceActivity {
+    ArrayList<Module> modules;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        modules = loadModules();
         initSettings();
     }
 
@@ -32,10 +36,21 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onPause() {
         super.onPause();
         for (Map.Entry<String, CheckBoxPreference> cbf : dicModules.entrySet()) {
+            String type = "";
+            for (Module m : modules) {
+                if (m.getName().equals(cbf.getKey())) {
+                    if (m instanceof AnalysisModule)
+                        type = "analysis.";
+                    else if (m instanceof SensorModule)
+                        type = "sensor.";
+                }
+            }
+            if (type.equals(""))
+                continue;
             if (cbf.getValue().isChecked()) {
-                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + cbf.getKey(), this);
+                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + cbf.getKey(), this);
             } else {
-                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + cbf.getKey(), this);
+                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + cbf.getKey(), this);
             }
         }
     }
@@ -49,8 +64,6 @@ public class SettingsActivity extends PreferenceActivity {
         PreferenceCategory preferenceCategory = new PreferenceCategory(this);
         preferenceCategory.setTitle("Analyse Moduler");
         root.addPreference(preferenceCategory);
-
-        ArrayList<Module> modules = loadModules();
 
         resolveDependencies(modules);
 
@@ -78,11 +91,12 @@ public class SettingsActivity extends PreferenceActivity {
 
     private void resolveDependencies(ArrayList<Module> modules) {
         for (Module module : modules) {
-            final List<Pair<Module, Set<Dependency>>> dependencySet = new ArrayList<>();
+            final List<Pair<AnalysisModule, Set<Dependency>>> dependencySet = new ArrayList<>();
             for (Module module2 : modules) {
-                if (!module.getName().equals(module2.getName())) {
-                    insertDependency(module2, module, dependencySet);
-                }
+                if (module2 instanceof AnalysisModule)
+                    if (!module.getName().equals(module2.getName())) {
+                        insertDependency((AnalysisModule)module2, module, dependencySet);
+                    }
             }
 
             dicModules.get(module.getName()).setOnPreferenceChangeListener(getOnPreferenceChangeListener(dependencySet));
@@ -96,7 +110,7 @@ public class SettingsActivity extends PreferenceActivity {
      * @param dependency
      * @param dependencySet
      */
-    private void insertDependency(Module module, Module dependency, List<Pair<Module, Set<Dependency>>> dependencySet) {
+    private void insertDependency(AnalysisModule module, Module dependency, List<Pair<AnalysisModule, Set<Dependency>>> dependencySet) {
         for (Set<Dependency> dpSet : module.getDependencies()) {
             for (Dependency dp : dpSet) {
                 if (dp.getName().equals(dependency.getName()))
@@ -121,16 +135,16 @@ public class SettingsActivity extends PreferenceActivity {
         return modules;
     }
 
-    private Preference.OnPreferenceChangeListener getOnPreferenceChangeListener(final List<Pair<Module, Set<Dependency>>> dependencySet) {
+    private Preference.OnPreferenceChangeListener getOnPreferenceChangeListener(final List<Pair<AnalysisModule, Set<Dependency>>> dependencySet) {
         return new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (newValue.toString().equals("true")) {
-                    for (Pair<Module, Set<Dependency>> setDP : dependencySet) {
+                    for (Pair<AnalysisModule, Set<Dependency>> setDP : dependencySet) {
                         dicModules.get(setDP.first.getName()).setEnabled(true);
                     }
                 } else {
-                    for (Pair<Module, Set<Dependency>> setDP : dependencySet) {
+                    for (Pair<AnalysisModule, Set<Dependency>> setDP : dependencySet) {
                         boolean checked = false;
                         for (Dependency dp : setDP.second) {
                             if (dicModules.get(dp.getName()).isChecked() && !dp.getName().equals(preference.getKey())) {
