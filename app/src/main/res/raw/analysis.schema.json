@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Module",
+  "title": "AnalysisModule",
   "type": "object",
   "properties": {
     "name": { "type": "string" },
@@ -53,15 +53,6 @@
       },
       "additionalProperties": false,
       "required": [ "name", "version" ]
-    },
-    "data": {
-      "properties": {
-        "name": { "type": "string" },
-        "dataTypes": { "type": "array", "items": { "enum": ["INTEGER", "REAL", "TEXT", "BLOB"] }, "uniqueItems":true, "minItems": 1 },
-        "fromTimestamp": { "type": "boolean" }
-      },
-      "additionalProperties": false,
-      "required": ["name", "dataTypes"]
     }
   }
 }

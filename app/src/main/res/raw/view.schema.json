@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Module",
+  "title": "ViewModule",
   "type": "object",
   "properties": {
     "name": { "type": "string" },
