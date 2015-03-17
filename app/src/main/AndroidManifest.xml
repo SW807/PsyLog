@@ -24,7 +24,7 @@
 
         <provider
             android:name="dk.aau.cs.psylog.data_access_layer.DBAccess"
-            android:authorities="dk.aau.cs.psylog.psylog"
+            android:authorities="dk.aau.cs.psylog.data_access_layer"
             android:exported="true"
             android:readPermission="dk.aau.cs.psylog.psylog.READ_DB"
             android:writePermission="dk.aau.cs.psylog.psylog.WRITE_DB" >
