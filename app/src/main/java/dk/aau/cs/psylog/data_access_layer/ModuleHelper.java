@@ -1,4 +1,4 @@
-package dk.aau.cs.psylog.psylog;
+package dk.aau.cs.psylog.data_access_layer;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import dk.aau.cs.psylog.generated.Column;
-import dk.aau.cs.psylog.generated.Module;
-import dk.aau.cs.psylog.generated.Table;
-import dk.aau.cs.psylog.module_lib.DBAccessContract;
+import dk.aau.cs.psylog.data_access_layer.generated.Column;
+import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.Table;
+import dk.aau.cs.psylog.psylog.R;
 
 public class ModuleHelper {
     private Context context;

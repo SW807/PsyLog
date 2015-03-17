@@ -1,13 +1,9 @@
-package dk.aau.cs.psylog.psylog;
+package dk.aau.cs.psylog.data_access_layer;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-
-import dk.aau.cs.psylog.module_lib.DBAccessContract;
 
 public class DBAccess extends ContentProvider{
 

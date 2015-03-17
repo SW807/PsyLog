@@ -23,7 +23,7 @@
         </activity>
 
         <provider
-            android:name=".DBAccess"
+            android:name="dk.aau.cs.psylog.data_access_layer.DBAccess"
             android:authorities="dk.aau.cs.psylog.psylog"
             android:exported="true"
             android:readPermission="dk.aau.cs.psylog.psylog.READ_DB"
