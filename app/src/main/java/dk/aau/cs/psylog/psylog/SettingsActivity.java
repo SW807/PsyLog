@@ -52,9 +52,11 @@ public class SettingsActivity extends PreferenceActivity {
 
         ArrayList<Module> modules = loadModules();
 
+        resolveDependencies(modules);
 
         }
 
+    private void resolveDependencies(ArrayList<Module> modules) {
         for (Module module : modules) {
             final List<Pair<Module, Set<Dependency>>> dependencySet = new ArrayList<>();
             for (Module module2 : modules) {
