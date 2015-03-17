@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dk.aau.cs.psylog.PsyLogConstants;
 import dk.aau.cs.psylog.data_access_layer.generated.Column;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
 import dk.aau.cs.psylog.data_access_layer.generated.Table;
@@ -75,7 +76,7 @@ public class ModuleHelper {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTableWithTime(PsyLogConstants.PACKAGE_NAME +  t.getName(), l.toArray(new String[l.size()]), true);
+            sqLiteHelper.createTableWithTime(PsyLogConstants.SQLITE_PACKAGE_NAME +  t.getName(), l.toArray(new String[l.size()]), true);
         }
     }
 }

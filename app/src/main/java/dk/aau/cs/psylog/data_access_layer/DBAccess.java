@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import dk.aau.cs.psylog.PsyLogConstants;
+
 public class DBAccess extends ContentProvider{
 
     SQLiteHelper sqLiteHelper;
@@ -42,6 +44,6 @@ public class DBAccess extends ContentProvider{
     }
 
     private String tableFromUri(Uri uri) {
-        return PsyLogConstants.PACKAGE_NAME + uri.getPath().replaceFirst("/","");
+        return PsyLogConstants.SQLITE_PACKAGE_NAME + uri.getPath().replaceFirst("/","");
     }
 }
