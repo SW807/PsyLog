@@ -1,9 +1,7 @@
-package dk.aau.cs.psylog.psylog;
+package dk.aau.cs.psylog.data_access_layer;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -19,7 +17,7 @@ public class DBAccess extends ContentProvider{
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return sqLiteHelper.readFromDB(uri.getPath().replaceFirst("/",""),projection,selection,selectionArgs,null,null,sortOrder,null);
+        return sqLiteHelper.readFromDB(tableFromUri(uri),projection,selection,selectionArgs,null,null,sortOrder,null);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class DBAccess extends ContentProvider{
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        sqLiteHelper.insertToDB(uri.getPath().replaceFirst("/", ""),values);
+        sqLiteHelper.insertToDB(tableFromUri(uri),values);
         return null;
     }
 
@@ -41,5 +39,9 @@ public class DBAccess extends ContentProvider{
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
+    }
+
+    private String tableFromUri(Uri uri) {
+        return PsyLogConstants.PACKAGE_NAME + uri.getPath().replaceFirst("/","");
     }
 }

@@ -1,4 +1,4 @@
-package dk.aau.cs.psylog.psylog;
+package dk.aau.cs.psylog.data_access_layer;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,11 +6,13 @@ import android.database.Cursor;
 
 import java.sql.SQLDataException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import dk.aau.cs.psylog.generated.Column;
-import dk.aau.cs.psylog.generated.Module;
-import dk.aau.cs.psylog.generated.Table;
+import dk.aau.cs.psylog.data_access_layer.generated.Column;
+import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.Table;
+import dk.aau.cs.psylog.psylog.R;
 
 public class ModuleHelper {
     private Context context;
@@ -25,7 +27,7 @@ public class ModuleHelper {
         sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " " + context.getString(R.string.SQLITE_Type_Text), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)+ " " + context.getString(R.string.SQLITE_Type_Real)}, true);
     }
 
-    private boolean updateModuleVersion(String name, double version) throws SQLDataException {
+    private void updateModuleVersion(String name, double version) throws SQLDataException {
         Cursor cursor = sqLiteHelper.readFromDB(context.getString(R.string.Manager_ModuleVersionsTable), null, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name}, null, null, null, null);
         if (cursor.getCount() == 1) {
             ContentValues cv = new ContentValues();
@@ -42,7 +44,6 @@ public class ModuleHelper {
                 throw new SQLDataException("Row could not be inserted");
         } else
             throw new InternalError("Duplicate module in modules table - RIP Project");
-        return false;
     }
 
     private boolean sameVersion(String name, double newVersion) {
@@ -53,13 +54,20 @@ public class ModuleHelper {
         return version == newVersion;
     }
 
-    public void updateAllModules(ArrayList<Module> modules) throws SQLDataException {
+    public HashMap<Module, Boolean> updateAllModules(ArrayList<Module> modules) {
+        HashMap<Module, Boolean> resultHashMap = new HashMap<>();
         for (Module module : modules) {
             if (!sameVersion(module.getName(), module.get_version())) {
-                updateModuleVersion(module.getName(), module.get_version());
+                try {
+                    updateModuleVersion(module.getName(), module.get_version());
+                    resultHashMap.put(module, true);
+                } catch (SQLDataException e) {
+                    resultHashMap.put(module, false);
+                }
                 createTables(module);
             }
         }
+        return resultHashMap;
     }
 
     private void createTables(Module module) {
@@ -67,7 +75,7 @@ public class ModuleHelper {
             List<String> l = new ArrayList<>();
             for (Column c : t.getColumns())
                 l.add(c.getName() + " " + c.getDataType());
-            sqLiteHelper.createTable(module.getName() + "_" +  t.getName(), l.toArray(new String[l.size()]), true);
+            sqLiteHelper.createTableWithTime(PsyLogConstants.PACKAGE_NAME +  t.getName(), l.toArray(new String[l.size()]), true);
         }
     }
 }

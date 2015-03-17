@@ -1,12 +1,13 @@
 package dk.aau.cs.psylog.psylog;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.sql.SQLDataException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import dk.aau.cs.psylog.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.JSONParser;
+import dk.aau.cs.psylog.data_access_layer.ModuleHelper;
+import dk.aau.cs.psylog.data_access_layer.generated.Module;
 
 
 public class Manager {
@@ -23,11 +24,6 @@ public class Manager {
     public void updateModules()
     {
         ArrayList<Module> modules =  jsonParser.parse();
-        try {
-            moduleHelper.updateAllModules(modules);
-        }
-        catch (SQLDataException e) {
-            Log.e("DB", e.getMessage());
-        }
+        HashMap<Module, Boolean> modulesUpdateStatus = moduleHelper.updateAllModules(modules);
     }
 }
