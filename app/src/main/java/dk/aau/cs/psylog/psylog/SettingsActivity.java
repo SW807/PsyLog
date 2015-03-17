@@ -54,6 +54,25 @@ public class SettingsActivity extends PreferenceActivity {
 
         resolveDependencies(modules);
 
+        setModulesRunning();
+
+        for (CheckBoxPreference value : dicModules.values()) {
+            preferenceCategory.addPreference(value);
+        }
+        this.setPreferenceScreen(root);
+
+    }
+
+    /**
+     * sets the status of all modules to its state (running / not running) in the dictionary
+     */
+    private void setModulesRunning() {
+        for (Map.Entry<String, Boolean> entry : ServiceHelper.servicesRunning(this).entrySet()) {
+            Preference pref = new Preference(this);
+            String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
+            pref.setKey(modName);
+            if (!dicModules.isEmpty())
+                dicModules.get(modName).getOnPreferenceChangeListener().onPreferenceChange(pref, entry.getValue());
         }
 
     private void resolveDependencies(ArrayList<Module> modules) {
