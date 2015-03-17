@@ -18,20 +18,6 @@
     "dependencies": {
       "type": "array",
       "items": { "type": "array", "items": { "$ref": "#/definitions/dependency" }, "minItems": 1, "uniqueItems": true }
-    },
-    "view": {
-      "type": "object",
-      "properties": {
-        "layout": { "type": "string", "pattern": "^[a-zA-Z0-9]+(.xml)" },
-        "data": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/data" },
-          "minItems": 1,
-          "uniqueItems": true
-        }
-      },
-      "additionalProperties": false,
-      "required": ["layout", "data"]
     }
   },
   "additionalProperties": false,
