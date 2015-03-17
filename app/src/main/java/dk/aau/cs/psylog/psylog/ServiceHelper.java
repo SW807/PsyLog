@@ -23,6 +23,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class ServiceHelper {
 
@@ -44,12 +45,23 @@ public class ServiceHelper {
         }
     }
 
-    public static HashMap<String,Boolean> servicesRunning(Context context){
-        HashMap<String, Boolean> resultHash = new HashMap<String,Boolean>();
-        for(String s : getInstalledProcessNames(context)){
-            resultHash.put(s,isServiceRunning(s,context));
-        }
+    public static HashMap<String, Boolean> servicesRunning(Context context) {
+        return servicesRunningHelper(context, getInstalledProcessNames(context));
+    }
 
+    public static HashMap<String, Boolean> servicesSensorsRunning(Context context) {
+        return servicesRunningHelper(context, getInstalledSensorsProcessNames(context));
+    }
+
+    public static HashMap<String, Boolean> servicesAnalysisRunning(Context context) {
+        return servicesRunningHelper(context, getInstalledAnalysisProcessNames(context));
+    }
+
+    private static HashMap<String, Boolean> servicesRunningHelper(Context context, List<String> services) {
+        HashMap<String, Boolean> resultHash = new HashMap<>();
+        for (String s : services) {
+            resultHash.put(s, isServiceRunning(s, context));
+        }
         return resultHash;
     }
 
@@ -63,24 +75,47 @@ public class ServiceHelper {
         return false;
     }
 
-    public static HashMap<String,InputStream> getJSONForInstalledProcesses(Context context){
-        HashMap<String,InputStream> resultHash = new HashMap<String,InputStream>();
-        for(String s : getInstalledProcessNames(context)){
-            InputStream temp = getProcessJSONDefinition(s,context);
-            if(temp != null)
-                resultHash.put(s,temp);
-        }
+    public static HashMap<String, InputStream> getJSONForInstalledProcesses(Context context) {
+        return getJSONForInstalledProcessesHelper(context, getInstalledProcessNames(context));
+    }
 
+    public static HashMap<String, InputStream> getJSONForSensorsInstalledProcesses(Context context) {
+        return getJSONForInstalledProcessesHelper(context, getInstalledSensorsProcessNames(context));
+    }
+
+    public static HashMap<String, InputStream> getJSONForAnalysisInstalledProcesses(Context context) {
+        return getJSONForInstalledProcessesHelper(context, getInstalledAnalysisProcessNames(context));
+    }
+
+    private static HashMap<String, InputStream> getJSONForInstalledProcessesHelper(Context context, List<String> services) {
+        HashMap<String, InputStream> resultHash = new HashMap<String, InputStream>();
+        for (String s : services) {
+            InputStream temp = getProcessJSONDefinition(s, context);
+            if (temp != null)
+                resultHash.put(s, temp);
+        }
         return resultHash;
     }
 
     public static List<String> getInstalledProcessNames(Context context) {
+        return getInstalledProcessNamesHelper(context, "");
+    }
+
+    public static List<String> getInstalledSensorsProcessNames(Context context) {
+        return getInstalledProcessNamesHelper(context, ".sensors");
+    }
+
+    public static List<String> getInstalledAnalysisProcessNames(Context context) {
+        return getInstalledProcessNamesHelper(context, ".analysis");
+    }
+
+    public static List<String> getInstalledProcessNamesHelper(Context context, String startsWith) {
         List<String> packageNames = new ArrayList<String>();
 
         PackageManager pm = context.getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
         for (ApplicationInfo ai : packages) {
-            if (ai.processName != null && ai.processName.startsWith("dk.aau.cs.psylog") && !ai.processName.equals("dk.aau.cs.psylog.psylog")) {
+            if (ai.processName != null && ai.processName.startsWith("dk.aau.cs.psylog" + startsWith) && !ai.processName.equals("dk.aau.cs.psylog.psylog")) {
                 packageNames.add(ai.processName);
             }
         }
@@ -95,8 +130,7 @@ public class ServiceHelper {
             resultStream = r.openRawResource(id);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("getProcessJSONDef", e.getMessage());
-        }
-        catch(Resources.NotFoundException e){
+        } catch (Resources.NotFoundException e) {
             Log.e("getProcessJSONDef", e.getMessage());
         }
 
