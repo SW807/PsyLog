@@ -31,4 +31,4 @@ build/
 *.iml
 
 # Generated files 
-app/src/main/java/dk/aau/cs/psylog/generated/*
+app/src/main/java/dk/aau/cs/psylog/data_access_layer/generated/*
