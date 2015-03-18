@@ -55,7 +55,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
-    final HashMap<String, CheckBoxPreference> dicModules = new HashMap<String, CheckBoxPreference>();
+    final HashMap<String, CheckBoxPreference> dicModules = new HashMap<>();
 
     private void initSettings() {
 
@@ -128,9 +128,8 @@ public class SettingsActivity extends PreferenceActivity {
         JSONParser parser = new JSONParser(this);
         ArrayList<Module> modules = parser.parse();
 
-
         for (Module module : modules) {
-            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), "some summa", true, false));
+            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), module.get_description(), true, false));
         }
         return modules;
     }
@@ -142,22 +141,40 @@ public class SettingsActivity extends PreferenceActivity {
                 if (newValue.toString().equals("true")) {
                     for (Pair<AnalysisModule, Set<Dependency>> setDP : dependencySet) {
                         dicModules.get(setDP.first.getName()).setEnabled(true);
+                        dicModules.get(setDP.first.getName()).setSummary(setDP.first.get_description());
                     }
                 } else {
                     for (Pair<AnalysisModule, Set<Dependency>> setDP : dependencySet) {
+                        CheckBoxPreference dependencyCheckBox = dicModules.get(setDP.first.getName());
                         boolean checked = false;
                         for (Dependency dp : setDP.second) {
-                            if (dicModules.get(dp.getName()).isChecked() && !dp.getName().equals(preference.getKey())) {
+                            if (dependencyCheckBox.isChecked() && !dp.getName().equals(preference.getKey())) {
                                 checked = true;
                                 break;
                             }
                         }
 
-                        dicModules.get(setDP.first.getName()).setEnabled(checked);
-                        dicModules.get(setDP.first.getName()).setChecked(checked);
+
+                        dependencyCheckBox.setEnabled(checked);
+                        dependencyCheckBox.setChecked(checked);
+
+                        if(checked){
+                            dependencyCheckBox.setSummary(setDP.first.get_description());
+                        }
+                        else{
+                            String summary = "Du skal aktiver ";
+                            for(Dependency dp : setDP.second){
+                                if (!(dependencyCheckBox.isChecked() && !dp.getName().equals(preference.getKey()))) {
+                                    summary += dp.getName() + ", ";
+                                }
+                            }
+                            summary = summary.substring(0,summary.length() -2);
+                            dependencyCheckBox.setSummary(summary);
+                        }
+
                         Preference pref = new Preference(getSettingsContext());
                         pref.setKey(setDP.first.getName());
-                        dicModules.get(setDP.first.getName()).getOnPreferenceChangeListener().onPreferenceChange(pref, checked);
+                        dependencyCheckBox.getOnPreferenceChangeListener().onPreferenceChange(pref, checked);
                     }
                 }
                 return true;
