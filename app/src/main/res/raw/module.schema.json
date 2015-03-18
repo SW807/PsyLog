@@ -9,7 +9,8 @@
       "type": "number",
       "minimum": 0.0,
       "exclusiveMinimum": true
-    }
+    },
+    "_description":{ "type": "string" }
   },
   "required": [ "name", "_version" ],
   "additionalProperties": false
