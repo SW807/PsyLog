@@ -155,7 +155,7 @@ public class SettingsActivity extends PreferenceActivity {
 
                         dicModules.get(setDP.first.getName()).setEnabled(checked);
                         dicModules.get(setDP.first.getName()).setChecked(checked);
-                        Preference pref = new Preference(getCon());
+                        Preference pref = new Preference(getSettingsContext());
                         pref.setKey(setDP.first.getName());
                         dicModules.get(setDP.first.getName()).getOnPreferenceChangeListener().onPreferenceChange(pref, checked);
                     }
@@ -165,7 +165,7 @@ public class SettingsActivity extends PreferenceActivity {
         };
     }
 
-    public Context getCon() {
+    public Context getSettingsContext() {
         return this;
     }
 
