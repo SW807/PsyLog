@@ -25,7 +25,7 @@
         "version": { "type": "number", "minimum": 0.0, "exclusiveMinimum": true }
       },
       "additionalProperties": false,
-      "required": [ "name", "version" ]
+      "required": [ "name", "version", "task" ]
     }
   }
 }

@@ -29,7 +29,7 @@
         }
       },
       "additionalProperties": false,
-      "required": [ "name", "columns" ]
+      "required": [ "name", "columns", "task" ]
     }
   }
 }

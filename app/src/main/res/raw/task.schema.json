@@ -6,5 +6,7 @@
   "properties": {
     "type": { "enum": ["continuous", "interval", "scheduled"] },
     "value": { "type": "string" }
-  }
+  },
+  "additionalProperties": false,
+  "required": ["type", "value"]
 }
