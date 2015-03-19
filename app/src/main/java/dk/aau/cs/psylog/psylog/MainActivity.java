@@ -56,10 +56,4 @@ public class MainActivity extends ActionBarActivity {
         ServiceHelper.stopService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
         super.onDestroy();
     }
-
-    public void openOtherAct(View view) {
-        Intent intent = new Intent(this, ListViewBarChartActivity.class);
-        startActivity(intent);
-
-    }
 }
