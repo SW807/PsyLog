@@ -28,7 +28,7 @@ public class ModuleHelper {
     }
 
     public void createModuleVersionTable() {
-        sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " " + context.getString(R.string.SQLITE_Type_Text), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)+ " " + context.getString(R.string.SQLITE_Type_Real)}, true);
+        sqLiteHelper.createTable(context.getString(R.string.Manager_ModuleVersionsTable), new String[]{context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " " + context.getString(R.string.SQLITE_Type_Text), context.getString(R.string.Manager_ModuleVersionsTable_VersionColumn)+ " " + context.getString(R.string.SQLITE_Type_Real)}, false);
     }
 
     private void updateModuleVersion(String name, double version) throws SQLDataException {
@@ -53,8 +53,9 @@ public class ModuleHelper {
     private boolean sameVersion(String name, double newVersion) {
         double version = 0;
         Cursor cursor = sqLiteHelper.readFromDB(context.getString(R.string.Manager_ModuleVersionsTable), null, context.getString(R.string.Manager_ModuleVersionsTable_NameColumn) + " = ?", new String[]{name}, null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 1)
-            version = cursor.getDouble(1);
+            version = cursor.getDouble(2);
         return version == newVersion;
     }
 
