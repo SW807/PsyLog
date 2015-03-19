@@ -14,6 +14,10 @@
     "dependencies": {
       "type": "array",
       "items": { "type": "array", "items": { "$ref": "#/definitions/dependency" }, "minItems": 1, "uniqueItems": true }
+    },
+    "task": {
+      "type": "object",
+      "oneOf": [ { "$ref": "intervaltask.schema.json" }, { "$ref": "scheduledtask.schema.json" } ]
     }
   },
   "additionalProperties": false,

@@ -9,6 +9,10 @@
       "items": { "$ref": "table.schema.json" },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "task": {
+      "type": "object",
+      "oneOf": [ { "$ref": "continuoustask.schema.json" }, { "$ref": "intervaltask.schema.json" }, { "$ref": "scheduledtask.schema.json" } ]
     }
   },
   "additionalProperties": false,
