@@ -1,6 +1,0 @@
-{
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "SensorModule",
-  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.TaskType",
-  "additionalProperties": false
-}

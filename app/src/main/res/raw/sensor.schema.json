@@ -13,7 +13,8 @@
     "task": {
       "type": "object",
       "oneOf": [ { "$ref": "continuoustask.schema.json" }, { "$ref": "intervaltask.schema.json" }, { "$ref": "scheduledtask.schema.json" } ]
-    }
+    },
+    "task": { "$ref": "task.schema.json" }
   },
   "additionalProperties": false,
   "definitions": {
