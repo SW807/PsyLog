@@ -5,7 +5,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.github.mikephil.charting.data.BarData;
+
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -18,6 +25,12 @@ public class MainActivity extends ActionBarActivity {
 
         Manager manager = new Manager(this);
         manager.updateModules();
+
+        ListView listView = (ListView)findViewById(R.id.list_view);
+
+        StepCounterBarChartView stepCounterBarChartView = new StepCounterBarChartView(this, null);
+        listView.setAdapter(stepCounterBarChartView.cda);
+
     }
 
     @Override
@@ -42,5 +55,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onDestroy() {
         ServiceHelper.stopService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
         super.onDestroy();
+    }
+
+    public void openOtherAct(View view) {
+        Intent intent = new Intent(this, ListViewBarChartActivity.class);
+        startActivity(intent);
+
     }
 }

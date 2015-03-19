@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">PsyLog</string>
     <string name="action_settings">Indstillinger</string>
     <string name="Manager_ModuleVersionsTable">Manager_ModuleVersions</string>
@@ -6,4 +8,7 @@
     <string name="Manager_ModuleVersionsTable_VersionColumn">Version</string>
     <string name="SQLITE_Type_Text">TEXT</string>
     <string name="SQLITE_Type_Real">REAL</string>
+    <string name="title_activity_bar_chart">BarChartActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

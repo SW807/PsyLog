@@ -46,6 +46,10 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
@@ -55,6 +59,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:latest.integration'
     compile 'org.apache.commons:commons-lang3:latest.integration'
     compile 'javax.annotation:javax.annotation-api:latest.integration'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.0.8'
 }
 
 jsonSchema2Pojo {
