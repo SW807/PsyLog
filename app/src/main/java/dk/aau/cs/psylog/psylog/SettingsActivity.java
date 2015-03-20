@@ -151,7 +151,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         //Makes the topological sort of checkBoxPrefenrences
         HashMap <Integer, ArrayList<ModuleNode>> sortedModuleNodes = new HashMap<>();
-        int maxLevel = 0;
         for(ModuleNode value : moduleModuleNodeHashMap.values()){
             int curMaxLevel = value.getMaxLevel();
             if(!sortedModuleNodes.containsKey(curMaxLevel))
