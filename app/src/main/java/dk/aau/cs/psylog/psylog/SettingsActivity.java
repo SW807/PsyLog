@@ -37,12 +37,41 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         modules = loadModules();
 
-        for(Module m : modules){
-            stringModuleHashMap.put(m.getName(),m);
-            moduleModuleNodeHashMap.put(m, new ModuleNode(makePreference(m.getName(),m.getName(),m.get_description(),false,false)));
-        }
+        FillHashMaps();
+        ConstructTreeForModules();
+        SetOnPreferenceChangeListenerForModules();
+        SetModulesStatus();
+        CreatePreferenceScreen();
+    }
 
-        for(Module m : modules) {
+    /**
+     * Starts the modules that are checked and stops the modules that are unchecked.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (Map.Entry<Module, ModuleNode> entry : moduleModuleNodeHashMap.entrySet()) {
+            String type = "";
+            if (entry.getKey() instanceof AnalysisModule)
+                type = "analysis.";
+            else if (entry.getKey() instanceof SensorModule)
+                type = "sensor.";
+            if (entry.getValue().getChecked())
+                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + entry.getKey().getName(), this);
+            else
+                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + entry.getKey().getName(), this);
+        }
+    }
+
+    private void FillHashMaps() {
+        for (Module m : modules) {
+            stringModuleHashMap.put(m.getName(), m);
+            moduleModuleNodeHashMap.put(m, new ModuleNode(makePreference(m.getName(), m.getName(), m.get_description(), false, false)));
+        }
+    }
+
+    private void ConstructTreeForModules() {
+        for (Module m : modules) {
             if (m instanceof AnalysisModule) {
                 for (Set<Dependency> dependencies : ((AnalysisModule) m).getDependencies()) {
                     ArrayList<INode> nodesToBeAdded = new ArrayList<>();
@@ -60,15 +89,20 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             }
         }
+    }
 
-        for(final Map.Entry<Module,ModuleNode> entry : moduleModuleNodeHashMap.entrySet()){
+    /**
+     * Sets the OnPreferenceChangeListener for modules
+     */
+    private void SetOnPreferenceChangeListenerForModules() {
+        for (final Map.Entry<Module, ModuleNode> entry : moduleModuleNodeHashMap.entrySet()) {
             entry.getValue().setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     entry.getValue().setChecked((boolean) newValue);
-                    for (INode iNode : entry.getValue().getParents()){
-                        if(iNode instanceof ModuleNode){
-                            ModuleNode moduleNode = (ModuleNode)iNode;
+                    for (INode iNode : entry.getValue().getParents()) {
+                        if (iNode instanceof ModuleNode) {
+                            ModuleNode moduleNode = (ModuleNode) iNode;
                             moduleNode.setEnabled(moduleNode.isValid().equals(ModuleEnum.VALID));
                             Preference pref = new Preference(getSettingsContext());
                             pref.setKey(entry.getKey().getName());
@@ -79,7 +113,12 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             });
         }
+    }
 
+    /**
+     * Sets the status of every Module, first checks if it is running, and afterwards disable the modules that are not valid.
+     */
+    private void SetModulesStatus() {
         for (Map.Entry<String, Boolean> entry : ServiceHelper.servicesRunning(this).entrySet()) {
             Preference pref = new Preference(this);
             String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
@@ -88,13 +127,18 @@ public class SettingsActivity extends PreferenceActivity {
             moduleModuleNodeHashMap.get(stringModuleHashMap.get(modName)).setChecked(entry.getValue());
         }
 
-        for(ModuleNode m : moduleModuleNodeHashMap.values()){
+        for (ModuleNode m : moduleModuleNodeHashMap.values()) {
             boolean enabled = m.isValid().equals(ModuleEnum.VALID);
             m.setEnabled(enabled);
-            if(!enabled)
+            if (!enabled)
                 m.setChecked(false);
         }
+    }
 
+    /**
+     * Creates the preference screen, depending on what the preferenceCheckBox is in the modulenodes.
+     */
+    private void CreatePreferenceScreen() {
         PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
 
         PreferenceCategory preferenceCategory = new PreferenceCategory(this);
@@ -107,154 +151,36 @@ public class SettingsActivity extends PreferenceActivity {
         this.setPreferenceScreen(root);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        for(Map.Entry<Module,ModuleNode> entry : moduleModuleNodeHashMap.entrySet()){
-            String type = "";
-            if(entry.getKey() instanceof AnalysisModule)
-                type = "analysis.";
-            else if(entry.getKey() instanceof SensorModule)
-                type = "sensor.";
-            if(entry.getValue().getChecked())
-                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + entry.getKey().getName(),this);
-            else
-                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + entry.getKey().getName(),this);
-        }
-    }
-
-    final HashMap<String, CheckBoxPreference> dicModules = new HashMap<>();
-
-    private void initSettings() {
-
-        PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
-
-        PreferenceCategory preferenceCategory = new PreferenceCategory(this);
-        preferenceCategory.setTitle("Analyse Moduler");
-        root.addPreference(preferenceCategory);
-
-        resolveDependencies(modules);
-
-        setModulesRunning();
-
-        for (CheckBoxPreference value : dicModules.values()) {
-            preferenceCategory.addPreference(value);
-        }
-        this.setPreferenceScreen(root);
-
-    }
-
     /**
-     * sets the status of all modules to its state (running / not running) in the dictionary
-     */
-    private void setModulesRunning() {
-        for (Map.Entry<String, Boolean> entry : ServiceHelper.servicesRunning(this).entrySet()) {
-            Preference pref = new Preference(this);
-            String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
-            pref.setKey(modName);
-            if (!dicModules.isEmpty())
-                dicModules.get(modName).getOnPreferenceChangeListener().onPreferenceChange(pref, entry.getValue());
-        }
-    }
-
-    private void resolveDependencies(ArrayList<Module> modules) {
-        for (Module module : modules) {
-            final List<Pair<AnalysisModule, Set<Dependency>>> dependencySet = new ArrayList<>();
-            for (Module module2 : modules) {
-                if (module2 instanceof AnalysisModule)
-                    if (!module.getName().equals(module2.getName())) {
-                        insertDependency((AnalysisModule)module2, module, dependencySet);
-                    }
-            }
-
-            dicModules.get(module.getName()).setOnPreferenceChangeListener(getOnPreferenceChangeListener(dependencySet));
-        }
-    }
-
-    /**
-     * inserts dependency to the set of dependencies if module is dependent on it
-     *
-     * @param module
-     * @param dependency
-     * @param dependencySet
-     */
-    private void insertDependency(AnalysisModule module, Module dependency, List<Pair<AnalysisModule, Set<Dependency>>> dependencySet) {
-        for (Set<Dependency> dpSet : module.getDependencies()) {
-            for (Dependency dp : dpSet) {
-                if (dp.getName().equals(dependency.getName()))
-                    dependencySet.add(new Pair<>(module, dpSet));
-            }
-        }
-    }
-
-    /**
-     * Loads installed modules and creates an enabled unchecked checkbox for each.
+     * Loads installed modules.
      *
      * @return an arraylist of all modules
      */
     private ArrayList<Module> loadModules() {
         JSONParser parser = new JSONParser(this);
         ArrayList<Module> modules = parser.parse();
-
-        for (Module module : modules) {
-            dicModules.put(module.getName(), makePreference(module.getName(), module.getName(), module.get_description(), true, false));
-        }
         return modules;
     }
 
-    private Preference.OnPreferenceChangeListener getOnPreferenceChangeListener(final List<Pair<AnalysisModule, Set<Dependency>>> dependencySet) {
-        return new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue.toString().equals("true")) {
-                    for (Pair<AnalysisModule, Set<Dependency>> setDP : dependencySet) {
-                        dicModules.get(setDP.first.getName()).setEnabled(true);
-                        dicModules.get(setDP.first.getName()).setSummary(setDP.first.get_description());
-                    }
-                } else {
-                    for (Pair<AnalysisModule, Set<Dependency>> setDP : dependencySet) {
-                        CheckBoxPreference dependencyCheckBox = dicModules.get(setDP.first.getName());
-                        boolean checked = false;
-                        for (Dependency dp : setDP.second) {
-                            if (dependencyCheckBox.isChecked() && !dp.getName().equals(preference.getKey())) {
-                                checked = true;
-                                break;
-                            }
-                        }
-
-
-                        dependencyCheckBox.setEnabled(checked);
-                        dependencyCheckBox.setChecked(checked);
-
-                        if(checked){
-                            dependencyCheckBox.setSummary(setDP.first.get_description());
-                        }
-                        else{
-                            String summary = "Du skal aktiver ";
-                            for(Dependency dp : setDP.second){
-                                if (!(dependencyCheckBox.isChecked() && !dp.getName().equals(preference.getKey()))) {
-                                    summary += dp.getName() + ", ";
-                                }
-                            }
-                            summary = summary.substring(0,summary.length() -2);
-                            dependencyCheckBox.setSummary(summary);
-                        }
-
-                        Preference pref = new Preference(getSettingsContext());
-                        pref.setKey(setDP.first.getName());
-                        dependencyCheckBox.getOnPreferenceChangeListener().onPreferenceChange(pref, checked);
-                    }
-                }
-                return true;
-            }
-        };
-    }
-
+    /**
+     * Method to get the context within a scope that are not able to get the context
+     *
+     * @return Context
+     */
     public Context getSettingsContext() {
         return this;
     }
 
-
+    /**
+     * Method to construct a checkboxpreference.
+     *
+     * @param key     to identify the checkboxpreference
+     * @param title   the title of the checkboxpreference
+     * @param summary the summary of the checkboxpreference
+     * @param enabled the enabled status of the cehckboxpreference
+     * @param checked the checked status of the checkboxpreference
+     * @return the checkboxpreference constructed from the parameters
+     */
     private CheckBoxPreference makePreference(String key, String title, String summary, boolean enabled, boolean checked) {
         CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
         checkBoxPreference.setKey(key);
