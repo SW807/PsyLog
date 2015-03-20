@@ -5,4 +5,5 @@ package dk.aau.cs.psylog.data_access_layer.DependencyGraph;
  */
 public interface INode {
     public ModuleEnum isValid();
+    public int getMaxLevel();
 }

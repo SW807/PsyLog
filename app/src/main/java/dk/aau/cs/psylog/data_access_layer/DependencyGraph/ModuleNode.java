@@ -2,7 +2,6 @@ package dk.aau.cs.psylog.data_access_layer.DependencyGraph;
 
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.widget.CheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +50,18 @@ public class ModuleNode implements INode{
                 return ModuleEnum.NOT_VALID;
         }
         return ModuleEnum.VALID;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        int level = 0;
+        for(DependencyNode dependencyNode : children)
+        {
+            int dependencyMaxLevel = dependencyNode.getMaxLevel();
+            if(dependencyMaxLevel > level)
+                level = dependencyMaxLevel;
+        }
+        return level + 1;
     }
 
     /**

@@ -46,4 +46,15 @@ public class DependencyNode {
         }
         return ModuleEnum.NOT_VALID;
     }
+
+    public int getMaxLevel(){
+        int level = 0;
+        for(INode iNode : children)
+        {
+            int dependencyMaxLevel = iNode.getMaxLevel();
+            if(dependencyMaxLevel > level)
+                level = dependencyMaxLevel;
+        }
+        return level;
+    }
 }

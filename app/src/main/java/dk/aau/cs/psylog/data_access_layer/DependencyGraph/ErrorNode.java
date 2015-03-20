@@ -20,4 +20,9 @@ public class ErrorNode implements INode {
     public ModuleEnum isValid(){
         return error;
     }
+
+    @Override
+    public int getMaxLevel() {
+        return 0;
+    }
 }

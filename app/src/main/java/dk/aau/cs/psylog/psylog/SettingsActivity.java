@@ -147,9 +147,21 @@ public class SettingsActivity extends PreferenceActivity {
         PreferenceCategory preferenceCategory = new PreferenceCategory(this);
         preferenceCategory.setTitle("Analyse Moduler");
         root.addPreference(preferenceCategory);
+        preferenceCategory.setOrderingAsAdded(true);
 
-        for (ModuleNode value : moduleModuleNodeHashMap.values()) {
-            preferenceCategory.addPreference(value.getCheckBoxPrefence());
+        HashMap <Integer, ArrayList<ModuleNode>> sortedModuleNodes = new HashMap<>();
+        int maxLevel = 0;
+        for(ModuleNode value : moduleModuleNodeHashMap.values()){
+            int curMaxLevel = value.getMaxLevel();
+            if(!sortedModuleNodes.containsKey(curMaxLevel))
+                sortedModuleNodes.put(curMaxLevel,new ArrayList<ModuleNode>());
+            sortedModuleNodes.get(curMaxLevel).add(value);
+        }
+
+        for(int i = 1; i <= sortedModuleNodes.values().size(); i++){
+            for(ModuleNode moduleNode : sortedModuleNodes.get(i)){
+                preferenceCategory.addPreference(moduleNode.getCheckBoxPrefence());
+            }
         }
         this.setPreferenceScreen(root);
     }
