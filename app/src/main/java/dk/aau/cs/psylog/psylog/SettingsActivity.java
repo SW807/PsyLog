@@ -7,16 +7,13 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import dk.aau.cs.psylog.PsyLogConstants;
-import dk.aau.cs.psylog.data_access_layer.DependencyGraph.DependencyNode;
 import dk.aau.cs.psylog.data_access_layer.DependencyGraph.ErrorNode;
 import dk.aau.cs.psylog.data_access_layer.DependencyGraph.INode;
 import dk.aau.cs.psylog.data_access_layer.DependencyGraph.ModuleEnum;
@@ -28,9 +25,9 @@ import dk.aau.cs.psylog.data_access_layer.generated.Module;
 import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 
 public class SettingsActivity extends PreferenceActivity {
-    ArrayList<Module> modules;
-    HashMap<String, Module> stringModuleHashMap = new HashMap<>();
-    HashMap<Module, ModuleNode> moduleModuleNodeHashMap = new HashMap<>();
+    private ArrayList<Module> modules;
+    private HashMap<String, Module> stringModuleHashMap = new HashMap<>();
+    private HashMap<Module, ModuleNode> moduleModuleNodeHashMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -196,5 +193,4 @@ public class SettingsActivity extends PreferenceActivity {
         checkBoxPreference.setChecked(checked);
         return checkBoxPreference;
     }
-
 }
