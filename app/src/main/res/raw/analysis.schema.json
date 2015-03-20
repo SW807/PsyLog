@@ -3,19 +3,12 @@
   "title": "AnalysisModule",
   "type": "object",
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule",
-  "extends": { "$ref": "module.schema.json" },
+  "extends": { "$ref": "datamodule.schema.json" },
   "properties": {
-    "tables": {
-      "type": "array",
-      "items": { "$ref": "table.schema.json" },
-      "minItems": 1,
-      "uniqueItems": true
-    },
     "dependencies": {
       "type": "array",
       "items": { "type": "array", "items": { "$ref": "#/definitions/dependency" }, "minItems": 1, "uniqueItems": true }
-    },
-    "task": { "$ref": "task.schema.json" }
+    }
   },
   "additionalProperties": false,
   "definitions": {
