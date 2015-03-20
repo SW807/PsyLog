@@ -13,8 +13,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);;
-   //     ServiceHelper.startService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
+        setContentView(R.layout.activity_main);
 
         Manager manager = new Manager(this);
         manager.updateModules();
@@ -40,7 +39,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        ServiceHelper.stopService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
         super.onDestroy();
     }
 }
