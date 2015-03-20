@@ -3,6 +3,7 @@ package dk.aau.cs.psylog.psylog;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -15,20 +16,51 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
+import dk.aau.cs.psylog.data_access_layer.JSONParser;
+import dk.aau.cs.psylog.data_access_layer.generated.DataModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
-import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Task;
 
 public class TaskRunner extends Service {
     private ArrayList<ModuleTask> tasks;
 
-    public TaskRunner() {
-        this.tasks = new ArrayList<>();
+    private void initializeTasks(ArrayList<Module> modules){
+        for (Module m : modules) {
+            if (m instanceof DataModule) {
+                 DataModule dataModule = ((DataModule) m);
+                if (dataModule.getTask().getType() != Task.Type.CONTINUOUS) {
+                    ModuleTask mt = new ModuleTask(dataModule);
+                    mt.setTime(getNextTime(mt.getModule().getTask()));
+                    tasks.add(mt);
+                }
+            }
+        }
+        sortAfterRunningTime();
     }
 
-    public void add(ModuleTask task){
+    @Override
+    public void onCreate() {
+        this.tasks = new ArrayList<>();
+        JSONParser jsonParser = new JSONParser(this);
+        initializeTasks(jsonParser.parse());
+        super.onCreate();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        startTask();
+        return START_STICKY;
+    }
+
+    private void add(ModuleTask task){
         this.tasks.add(task);
+        sortAfterRunningTime();
+    }
+
+    private void sleep(){
+        long diff = new Date().getTime() - tasks.get(0).getTime().getTime();
+        if (diff > 0)
+            SystemClock.sleep(diff);
     }
 
     private void sortAfterRunningTime(){
@@ -37,13 +69,7 @@ public class TaskRunner extends Service {
 
     private void updateTaskTime(ModuleTask task)
     {
-        Module m = task.getModule();
-        if (m instanceof SensorModule) {
-            task.setTime(getNextTime(((SensorModule) m).getTask()));
-        }
-        else if (m instanceof AnalysisModule) {
-            task.setTime(getNextTime(((SensorModule) m).getTask()));
-        }
+        task.setTime(getNextTime(task.getModule().getTask()));
         sortAfterRunningTime();
     }
 
@@ -82,7 +108,9 @@ public class TaskRunner extends Service {
         throw new IllegalArgumentException("Illegal time format of: "  + date + ". Should be HH:mm.");
     }
 
-    private void startTask(ModuleTask task){
+    private void startTask(){
+        sleep();
+        ModuleTask task = tasks.get(0);
         ServiceHelper.startService(ServiceHelper.getProcessName(task.getModule()), this);
         updateTaskTime(task);
     }

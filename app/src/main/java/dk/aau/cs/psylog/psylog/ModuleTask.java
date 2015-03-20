@@ -2,14 +2,14 @@ package dk.aau.cs.psylog.psylog;
 
 import java.util.Date;
 
+import dk.aau.cs.psylog.data_access_layer.generated.DataModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
 
 public class ModuleTask {
     private Date time;
-    private Module module;
+    private DataModule module;
 
-    public ModuleTask(Date time, Module module){
-        this.time = time;
+    public ModuleTask(DataModule module){
         this.module = module;
     }
 
@@ -21,7 +21,7 @@ public class ModuleTask {
         this.time = time;
     }
 
-    public Module getModule(){
+    public DataModule getModule(){
         return  this.module;
     }
 }

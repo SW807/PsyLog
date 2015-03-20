@@ -18,6 +18,9 @@ public class MainActivity extends ActionBarActivity {
 
         Manager manager = new Manager(this);
         manager.updateModules();
+
+        Intent intent = new Intent(this, TaskRunner.class);
+        startService(intent);
     }
 
     @Override
