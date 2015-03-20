@@ -149,6 +149,7 @@ public class SettingsActivity extends PreferenceActivity {
         root.addPreference(preferenceCategory);
         preferenceCategory.setOrderingAsAdded(true);
 
+        //Makes the topological sort of checkBoxPrefenrences
         HashMap <Integer, ArrayList<ModuleNode>> sortedModuleNodes = new HashMap<>();
         int maxLevel = 0;
         for(ModuleNode value : moduleModuleNodeHashMap.values()){
