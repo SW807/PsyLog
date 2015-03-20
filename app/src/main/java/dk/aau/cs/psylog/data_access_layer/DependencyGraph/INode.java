@@ -1,9 +1,8 @@
 package dk.aau.cs.psylog.data_access_layer.DependencyGraph;
 
 /**
- * Created by Mathias on 19-03-2015.
+ * INode is a interface to make similarities between ErrorNode and ModuleNode, makes DepedencyNode more beautiful.
  */
 public interface INode {
     public ModuleEnum isValid();
-    public void addParent(DependencyNode parent);
 }
