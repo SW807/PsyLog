@@ -62,7 +62,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         for(String s : columns){
             query += ", " + s;
         }
-        query += ", time TIMESTAMP DEFAULT (datetime('now','localtime'))";
+        query += ", time TIMESTAMP DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'))";
         query += ");";
         writableDB.execSQL(query);
     }
