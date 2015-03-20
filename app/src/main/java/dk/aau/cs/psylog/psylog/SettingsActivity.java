@@ -63,6 +63,9 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
+    /**
+     * Fills stringModuleHashMap and moduleModuleNodeHashMap such it can be used in the constructTreeForModule
+     */
     private void FillHashMaps() {
         for (Module m : modules) {
             stringModuleHashMap.put(m.getName(), m);
@@ -70,6 +73,9 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
+    /**
+     * Construct the tree for the modules, such that each ModuleNode are connected to its dependency.
+     */
     private void ConstructTreeForModules() {
         for (Module m : modules) {
             if (m instanceof AnalysisModule) {
