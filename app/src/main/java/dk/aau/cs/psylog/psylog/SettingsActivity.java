@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.Set;
 
 import dk.aau.cs.psylog.PsyLogConstants;
+import dk.aau.cs.psylog.data_access_layer.DependencyGraph.DependencyNode;
+import dk.aau.cs.psylog.data_access_layer.DependencyGraph.ErrorNode;
+import dk.aau.cs.psylog.data_access_layer.DependencyGraph.INode;
+import dk.aau.cs.psylog.data_access_layer.DependencyGraph.ModuleEnum;
+import dk.aau.cs.psylog.data_access_layer.DependencyGraph.ModuleNode;
 import dk.aau.cs.psylog.data_access_layer.JSONParser;
 import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Dependency;
@@ -24,34 +29,97 @@ import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 
 public class SettingsActivity extends PreferenceActivity {
     ArrayList<Module> modules;
+    HashMap<String, Module> stringModuleHashMap = new HashMap<>();
+    HashMap<Module, ModuleNode> moduleModuleNodeHashMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         modules = loadModules();
-        initSettings();
+
+        for(Module m : modules){
+            stringModuleHashMap.put(m.getName(),m);
+            moduleModuleNodeHashMap.put(m, new ModuleNode(makePreference(m.getName(),m.getName(),m.get_description(),false,false)));
+        }
+
+        for(Module m : modules) {
+            if (m instanceof AnalysisModule) {
+                for (Set<Dependency> dependencies : ((AnalysisModule) m).getDependencies()) {
+                    ArrayList<INode> nodesToBeAdded = new ArrayList<>();
+                    for (Dependency dependency : dependencies) {
+                        if (stringModuleHashMap.containsKey(dependency.getName())) {
+                            Module moduleToAdd = stringModuleHashMap.get(dependency.getName());
+                            if (moduleToAdd.get_version().equals(dependency.getVersion()))
+                                nodesToBeAdded.add(moduleModuleNodeHashMap.get(moduleToAdd));
+                            else
+                                nodesToBeAdded.add(new ErrorNode(ModuleEnum.WRONG_VERSION));
+                        } else
+                            nodesToBeAdded.add(new ErrorNode(ModuleEnum.NOT_INSTALLED));
+                    }
+                    moduleModuleNodeHashMap.get(m).addDependency(nodesToBeAdded);
+                }
+            }
+        }
+
+        for(final Map.Entry<Module,ModuleNode> entry : moduleModuleNodeHashMap.entrySet()){
+            entry.getValue().setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    entry.getValue().setChecked((boolean) newValue);
+                    for (INode iNode : entry.getValue().getParents()){
+                        if(iNode instanceof ModuleNode){
+                            ModuleNode moduleNode = (ModuleNode)iNode;
+                            moduleNode.setEnabled(moduleNode.isValid().equals(ModuleEnum.VALID));
+                            Preference pref = new Preference(getSettingsContext());
+                            pref.setKey(entry.getKey().getName());
+                            moduleNode.callOnPreferenceChange(pref, false);
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
+
+        for (Map.Entry<String, Boolean> entry : ServiceHelper.servicesRunning(this).entrySet()) {
+            Preference pref = new Preference(this);
+            String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
+            pref.setKey(modName);
+
+            moduleModuleNodeHashMap.get(stringModuleHashMap.get(modName)).setChecked(entry.getValue());
+        }
+
+        for(ModuleNode m : moduleModuleNodeHashMap.values()){
+            boolean enabled = m.isValid().equals(ModuleEnum.VALID);
+            m.setEnabled(enabled);
+            if(!enabled)
+                m.setChecked(false);
+        }
+
+        PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
+
+        PreferenceCategory preferenceCategory = new PreferenceCategory(this);
+        preferenceCategory.setTitle("Analyse Moduler");
+        root.addPreference(preferenceCategory);
+
+        for (ModuleNode value : moduleModuleNodeHashMap.values()) {
+            preferenceCategory.addPreference(value.getCheckBoxPrefence());
+        }
+        this.setPreferenceScreen(root);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        for (Map.Entry<String, CheckBoxPreference> cbf : dicModules.entrySet()) {
+        for(Map.Entry<Module,ModuleNode> entry : moduleModuleNodeHashMap.entrySet()){
             String type = "";
-            for (Module m : modules) {
-                if (m.getName().equals(cbf.getKey())) {
-                    if (m instanceof AnalysisModule)
-                        type = "analysis.";
-                    else if (m instanceof SensorModule)
-                        type = "sensor.";
-                }
-            }
-            if (type.equals(""))
-                continue;
-            if (cbf.getValue().isChecked()) {
-                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + cbf.getKey(), this);
-            } else {
-                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + cbf.getKey(), this);
-            }
+            if(entry.getKey() instanceof AnalysisModule)
+                type = "analysis.";
+            else if(entry.getKey() instanceof SensorModule)
+                type = "sensor.";
+            if(entry.getValue().getChecked())
+                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + entry.getKey().getName(),this);
+            else
+                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + entry.getKey().getName(),this);
         }
     }
 
