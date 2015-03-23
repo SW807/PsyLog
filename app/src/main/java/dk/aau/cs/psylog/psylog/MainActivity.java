@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.Window;
 
 public class MainActivity extends ActionBarActivity {
+    Intent taskRunnerIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +18,9 @@ public class MainActivity extends ActionBarActivity {
 
         Manager manager = new Manager(this);
         manager.updateModules();
+
+        taskRunnerIntent = new Intent(this, TaskRunner.class);
+        startService(taskRunnerIntent);
     }
 
     @Override
@@ -39,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
+        stopService(taskRunnerIntent);
         super.onDestroy();
     }
 }

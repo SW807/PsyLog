@@ -25,6 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import dk.aau.cs.psylog.PsyLogConstants;
+import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
+import dk.aau.cs.psylog.data_access_layer.generated.Module;
+import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
+import dk.aau.cs.psylog.data_access_layer.generated.ViewModule;
+
 public class ServiceHelper {
 
     private static String serviceName = ".PsyLogService";
@@ -135,5 +141,16 @@ public class ServiceHelper {
         }
 
         return resultStream;
+    }
+
+    public static String getProcessName(Module module) throws IllegalArgumentException
+    {
+        if (module instanceof SensorModule)
+            return PsyLogConstants.DOMAIN_NAME + "sensor." + module.getName();
+        else if (module instanceof AnalysisModule)
+            return PsyLogConstants.DOMAIN_NAME + "analysis." + module.getName();
+        else if (module instanceof ViewModule)
+            return PsyLogConstants.DOMAIN_NAME + "view." + module.getName();
+        throw  new IllegalArgumentException("Unknown module type");
     }
 }

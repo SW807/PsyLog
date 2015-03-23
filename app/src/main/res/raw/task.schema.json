@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Task",
+  "type": "object",
+  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.Task",
+  "properties": {
+    "type": { "enum": ["continuous", "interval", "scheduled"] },
+    "value": { "type": "string", "description": "Interval in minutes, scheduled in HH:MM format, continuous is ignored" }
+  },
+  "additionalProperties": false,
+  "required": ["type", "value"]
+}

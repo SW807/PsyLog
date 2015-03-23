@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "DataModule",
+  "type": "object",
+  "javaType": "dk.aau.cs.psylog.data_access_layer.generated.DataModule",
+  "extends": { "$ref": "module.schema.json" },
+  "properties": {
+    "tables": {
+      "type": "array",
+      "items": { "$ref": "table.schema.json" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "task": { "$ref": "task.schema.json" }
+  },
+  "required": [ "name", "_version" ],
+  "additionalProperties": false
+}
