@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,8 +127,11 @@ public class SettingsActivity extends PreferenceActivity {
             Preference pref = new Preference(this);
             String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
             pref.setKey(modName);
-
-            moduleModuleNodeHashMap.get(stringModuleHashMap.get(modName)).setChecked(entry.getValue());
+            try {
+                moduleModuleNodeHashMap.get(stringModuleHashMap.get(modName)).setChecked(entry.getValue());
+            }
+            catch(NullPointerException e){
+            }
         }
 
         for (ModuleNode m : moduleModuleNodeHashMap.values()) {
