@@ -1,10 +1,12 @@
 package dk.aau.cs.psylog.psylog;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
+import android.util.Pair;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,6 +25,7 @@ import dk.aau.cs.psylog.data_access_layer.generated.Task;
 
 public class TaskRunner extends Service {
     private ArrayList<ModuleTask> tasks;
+    final Thread thread = new Thread(new RunTask(this));
 
     private void initializeTasks(ArrayList<Module> modules){
         for (Module m : modules) {
@@ -48,19 +51,13 @@ public class TaskRunner extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startTask();
-        return START_STICKY;
+        thread.start();
+        return START_NOT_STICKY;
     }
 
     private void add(ModuleTask task){
         this.tasks.add(task);
         sortAfterRunningTime();
-    }
-
-    private void sleep(){
-        long diff = new Date().getTime() - tasks.get(0).getTime().getTime();
-        if (diff > 0)
-            SystemClock.sleep(diff);
     }
 
     private void sortAfterRunningTime(){
@@ -82,7 +79,10 @@ public class TaskRunner extends Service {
         }
         else if (task.getType() == Task.Type.SCHEDULED){
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(parseScheduled(task.getValue()));
+            calendar.setTime(new Date());
+            Pair<Integer,Integer> scheduledTime = parseScheduled(task.getValue());
+            calendar.set(Calendar.HOUR, scheduledTime.first);
+            calendar.set(Calendar.MINUTE, scheduledTime.second);
             calendar.add(Calendar.HOUR, 24);
             return calendar.getTime();
         }
@@ -93,26 +93,39 @@ public class TaskRunner extends Service {
         return Integer.parseInt(minutes);
     }
 
-    private Date parseScheduled(String date) throws IllegalArgumentException
+    private Pair<Integer,Integer> parseScheduled(String date) throws IllegalArgumentException
     {
         Pattern pattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
         Matcher matcher = pattern.matcher(date);
         if (matcher.matches()){
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-            try {
-                return simpleDateFormat.parse(date);
-            } catch (ParseException e) {
-                Log.d("TaskRunner", e.getMessage());
-            }
+            String[] time = date.split(":");
+            return new Pair<>(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
         }
         throw new IllegalArgumentException("Illegal time format of: "  + date + ". Should be HH:mm.");
     }
 
-    private void startTask(){
-        sleep();
-        ModuleTask task = tasks.get(0);
-        ServiceHelper.startService(ServiceHelper.getProcessName(task.getModule()), this);
-        updateTaskTime(task);
+    private class RunTask implements Runnable {
+
+        Context ctx;
+        private RunTask(Context ctx) {
+            this.ctx = ctx;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                ModuleTask task = tasks.get(0);
+                sleep();
+                ServiceHelper.startService(ServiceHelper.getProcessName(task.getModule()), ctx);
+                updateTaskTime(task);
+            }
+        }
+
+        private void sleep(){
+            long diff = tasks.get(0).getTime() - new Date().getTime();
+            if (diff > 0)
+                SystemClock.sleep(diff);
+        }
     }
 
     @Override
