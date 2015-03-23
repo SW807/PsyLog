@@ -1,5 +1,6 @@
 package dk.aau.cs.psylog.psylog;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.ActionBarActivity;
@@ -8,6 +9,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -25,8 +27,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);;
-   //     ServiceHelper.startService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
+        setContentView(R.layout.activity_main);
 
         Manager manager = new Manager(this);
         manager.updateModules();
@@ -35,11 +36,17 @@ public class MainActivity extends ActionBarActivity {
         View textView = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
         LinearLayout layout = (LinearLayout)findViewById(R.id.linlay);
         float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layout.getLayoutParams();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
         params.height = (int)pixels;
         layout.setLayoutParams(params);
+
         layout.addView(textView);
 
+        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView2", "HelloChartStepView2");
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) layout.getLayoutParams();
+        params.height = (int)pixels;
+        layout.setLayoutParams(params2);
+        layout.addView(textView2);
 
     }
 
@@ -63,7 +70,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        ServiceHelper.stopService("dk.aau.cs.psylog.psylog_accelerometermodule", this);
         super.onDestroy();
     }
 }
