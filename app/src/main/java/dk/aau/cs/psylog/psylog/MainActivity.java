@@ -1,14 +1,19 @@
 package dk.aau.cs.psylog.psylog;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.data.BarData;
 
@@ -26,10 +31,15 @@ public class MainActivity extends ActionBarActivity {
         Manager manager = new Manager(this);
         manager.updateModules();
 
-        ListView listView = (ListView)findViewById(R.id.list_view);
+        ViewLoader viewLoader = new ViewLoader(this);
+        View textView = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
+        LinearLayout layout = (LinearLayout)findViewById(R.id.linlay);
+        float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layout.getLayoutParams();
+        params.height = (int)pixels;
+        layout.setLayoutParams(params);
+        layout.addView(textView);
 
-        StepCounterBarChartView stepCounterBarChartView = new StepCounterBarChartView(this, null);
-        listView.setAdapter(stepCounterBarChartView.cda);
 
     }
 
