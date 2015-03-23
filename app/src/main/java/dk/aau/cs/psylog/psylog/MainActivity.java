@@ -40,10 +40,4 @@ public class MainActivity extends ActionBarActivity {
 
         startActivity(intent);
     }
-
-    @Override
-    protected void onDestroy() {
-        stopService(taskRunnerIntent);
-        super.onDestroy();
-    }
 }
