@@ -13,13 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
 import com.github.mikephil.charting.data.BarData;
 
 import java.util.ArrayList;
@@ -44,31 +43,11 @@ public class MainActivity extends ActionBarActivity {
         ViewLoader viewLoader = new ViewLoader(this);
         View textView = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
         LinearLayout layout = (LinearLayout)findViewById(R.id.MainActivityLayout);
-        //float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
-        //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-        //params.height = (int)pixels;
-        //layout.setLayoutParams(params);
-     //   layout.addView(textView);
-        //listItems.add(textView);
-        //adapter.add(textView);
-      //  layout.addView(textView);
-        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView2", "HelloChartStepView2");
-       // listView.addView(textView);
-      //  listView.addView(textView2);
-        //LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) layout.getLayoutParams();
-        //params.height = (int)pixels;
-        //layout.setLayoutParams(params2);
-        //listItems.add(textView2);
-        layout.addView(textView2);
-//adapter.add(textView2);
-
-        /*SackOfViewsAdapter adaptSmart = new SackOfViewsAdapter(listItems);
-
-        listView.setAdapter(adaptSmart);
-       Boolean b = adaptSmart.isEnabled(0);
-       Boolean b2 = adaptSmart.isEnabled(1);
-        adaptSmart.notifyDataSetChanged();*/
-        //listView.setAdapter(adapter);
+        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
+        int height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+        int width = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+        layout.addView(textView, width, height);
+        layout.addView(textView2, width, height);
     }
     ArrayAdapter<View> adapter;
     ListAdapter adapter2;
