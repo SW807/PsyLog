@@ -13,8 +13,8 @@ public class ModuleTask {
         this.module = module;
     }
 
-    public Date getTime(){
-        return time;
+    public Long getTime(){
+        return time.getTime();
     }
 
     public void setTime(Date time){
