@@ -146,11 +146,11 @@ public class ServiceHelper {
     public static String getProcessName(Module module) throws IllegalArgumentException
     {
         if (module instanceof SensorModule)
-            return PsyLogConstants.DOMAIN_NAME + "sensor.";
+            return PsyLogConstants.DOMAIN_NAME + "sensor." + module.getName();
         else if (module instanceof AnalysisModule)
-            return PsyLogConstants.DOMAIN_NAME + "analysis.";
+            return PsyLogConstants.DOMAIN_NAME + "analysis." + module.getName();
         else if (module instanceof ViewModule)
-            return PsyLogConstants.DOMAIN_NAME + "view.";
+            return PsyLogConstants.DOMAIN_NAME + "view." + module.getName();
         throw  new IllegalArgumentException("Unknown module type");
     }
 }
