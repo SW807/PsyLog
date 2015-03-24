@@ -31,7 +31,7 @@ public class TaskRunner extends Service {
         for (Module m : modules) {
             if (m instanceof DataModule) {
                  DataModule dataModule = ((DataModule) m);
-                if (dataModule.getTask().getType() != Task.Type.CONTINUOUS) {
+                if (dataModule.getTask() != null) {
                     ModuleTask mt = new ModuleTask(dataModule);
                     mt.setTime(getNextTime(mt.getModule().getTask()));
                     tasks.add(mt);
