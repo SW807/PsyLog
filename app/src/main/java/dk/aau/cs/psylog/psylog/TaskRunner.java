@@ -81,9 +81,11 @@ public class TaskRunner extends Service {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             Pair<Integer,Integer> scheduledTime = parseScheduled(task.getValue());
-            calendar.set(Calendar.HOUR, scheduledTime.first);
+            calendar.set(Calendar.HOUR_OF_DAY, scheduledTime.first);
             calendar.set(Calendar.MINUTE, scheduledTime.second);
-            calendar.add(Calendar.HOUR, 24);
+            calendar.set(Calendar.SECOND, 0);
+            if (calendar.getTimeInMillis() < new Date().getTime())
+                calendar.add(Calendar.HOUR_OF_DAY, 24);
             return calendar.getTime();
         }
         throw new IllegalArgumentException("Task should only be of type " + Task.Type.SCHEDULED + " and " + Task.Type.INTERVAL + ".");
