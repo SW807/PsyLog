@@ -1,5 +1,6 @@
 package dk.aau.cs.psylog.psylog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,14 +22,7 @@ public class MainActivity extends ActionBarActivity {
         Manager manager = new Manager(this);
         manager.updateModules();
 
-        /*ViewLoader viewLoader = new ViewLoader(this);
-        View textView = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
-        LinearLayout layout = (LinearLayout)findViewById(R.id.MainActivityLayout);
-        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView2", "HelloChartStepView2");
-        int height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
-        int width = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-        layout.addView(textView, width, height);
-        layout.addView(textView2, width, height);*/
+        /**/
     }
 
     @Override
@@ -52,5 +46,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public void showView() {
+        ViewLoader viewLoader = new ViewLoader(this);
+        View textView = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
+        LinearLayout layout = (LinearLayout)findViewById(R.id.MainActivityLayout);
+        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView2", "HelloChartStepView2");
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+        int width = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+        layout.addView(textView, width, height);
+        layout.addView(textView2, width, height);
     }
 }
