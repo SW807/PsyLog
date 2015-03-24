@@ -43,11 +43,13 @@ public class MainActivity extends ActionBarActivity {
         ViewLoader viewLoader = new ViewLoader(this);
         View textView = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
         LinearLayout layout = (LinearLayout)findViewById(R.id.MainActivityLayout);
-        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView", "HelloChartStepView");
+        View textView2 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView2", "HelloChartStepView2");
+        View textView3 = viewLoader.getView("dk.aau.cs.psylog.view.stepcountview", "dk.aau.cs.psylog.view.stepcountview.HelloChartStepView3", "HelloChartStepView3");
         int height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
         int width = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
         layout.addView(textView, width, height);
         layout.addView(textView2, width, height);
+        layout.addView(textView3, width, height);
     }
     ArrayAdapter<View> adapter;
     ListAdapter adapter2;
