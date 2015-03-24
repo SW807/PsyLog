@@ -52,7 +52,8 @@ public class TaskRunner extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (tasks.size() > 0)
-            thread.start();
+            if (!thread.isAlive())
+                thread.start();
         return START_NOT_STICKY;
     }
 
