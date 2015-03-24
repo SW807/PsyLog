@@ -13,6 +13,6 @@
     },
     "task": { "$ref": "task.schema.json" }
   },
-  "required": [ "name", "_version" ],
+  "required": ["name", "_version", "task"],
   "additionalProperties": false
 }
