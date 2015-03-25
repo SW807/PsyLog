@@ -1,6 +1,8 @@
 package dk.aau.cs.psylog.psylog;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -33,10 +35,12 @@ public class SettingsActivity extends PreferenceActivity {
     private ArrayList<Module> modules;
     private HashMap<String, Module> stringModuleHashMap = new HashMap<>();
     private List<Pair<Module, ModuleNode>> moduleModuleNodeHashMap = new ArrayList<>();
+    SettingsHelper.Modules settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        settings = new SettingsHelper.Modules(this);
         modules = loadModules();
 
         FillHashMaps();
@@ -52,16 +56,14 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        for (Pair<Module, ModuleNode> entry : moduleModuleNodeHashMap) {
-            String type = "";
-            if (entry.first instanceof AnalysisModule)
-                type = "analysis.";
-            else if (entry.first instanceof SensorModule)
-                type = "sensor.";
-            if (entry.second.getChecked())
-                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + entry.first.getName(), this);
-            else
-                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + entry.first.getName(), this);
+        if(!isChangingConfigurations()) {
+            for (Pair<Module, ModuleNode> entry : moduleModuleNodeHashMap) {
+                settings.setSettings(entry.first.getName(),entry.second.getChecked());
+            }
+            ServiceHelper.startActiveServices(this);
+
+            Intent taskRunnerIntent = new Intent(this, TaskRunner.class);
+            startService(taskRunnerIntent);
         }
     }
 
@@ -134,12 +136,11 @@ public class SettingsActivity extends PreferenceActivity {
      * Sets the status of every Module, first checks if it is running, and afterwards disable the modules that are not valid.
      */
     private void SetModulesStatus() {
-        for (Map.Entry<String, Boolean> entry : ServiceHelper.servicesRunning(this).entrySet()) {
+        for (Map.Entry<String,Module> entry : stringModuleHashMap.entrySet()) {
             Preference pref = new Preference(this);
-            String modName = entry.getKey().substring(entry.getKey().lastIndexOf('.') + 1);
-            pref.setKey(modName);
+            pref.setKey(entry.getKey());
             try {
-                getModuleNode(stringModuleHashMap.get(modName)).setChecked(entry.getValue());
+                getModuleNode(entry.getValue()).setChecked(new SettingsHelper.Modules(this).getSettings(entry.getKey()));
             }
             catch(NullPointerException e){
             }

@@ -31,7 +31,7 @@ public class TaskRunner extends Service {
         for (Module m : modules) {
             if (m instanceof DataModule) {
                  DataModule dataModule = ((DataModule) m);
-                if (dataModule.getTask() != null) {
+                if (dataModule.getTask() != null && new SettingsHelper.Modules(this).getSettings(m.getName())) {
                     ModuleTask mt = new ModuleTask(dataModule);
                     mt.setTime(getNextTime(mt.getModule().getTask()));
                     tasks.add(mt);
@@ -43,18 +43,23 @@ public class TaskRunner extends Service {
 
     @Override
     public void onCreate() {
-        this.tasks = new ArrayList<>();
-        JSONParser jsonParser = new JSONParser(this);
-        initializeTasks(jsonParser.parse());
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (tasks.size() > 0)
-            if (!thread.isAlive())
-                thread.start();
-        return START_NOT_STICKY;
+        this.tasks = new ArrayList<>();
+        JSONParser jsonParser = new JSONParser(this);
+        initializeTasks(jsonParser.parse());
+
+        if (thread.isAlive()) {
+            thread.interrupt();
+        }
+
+        if (tasks.size() > 0) {
+            thread.start();
+        }
+        return START_STICKY;
     }
 
     private void add(ModuleTask task){

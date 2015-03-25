@@ -35,7 +35,8 @@
             android:label="@string/title_activity_settings" >
         </activity>
 
-        <service android:name=".TaskRunner" />
+        <service android:name=".TaskRunner"
+            android:process=":my_process"/>
     </application>
 
 </manifest>
