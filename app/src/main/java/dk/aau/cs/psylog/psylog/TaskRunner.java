@@ -25,7 +25,7 @@ import dk.aau.cs.psylog.data_access_layer.generated.Task;
 
 public class TaskRunner extends Service {
     private ArrayList<ModuleTask> tasks;
-    final Thread thread = new Thread(new RunTask(this));
+    Thread thread;
 
     private void initializeTasks(ArrayList<Module> modules){
         for (Module m : modules) {
@@ -43,18 +43,20 @@ public class TaskRunner extends Service {
 
     @Override
     public void onCreate() {
+        thread = new Thread(new RunTask(this));
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(thread.isAlive()) {
+            thread.interrupt();
+            thread = new Thread(new RunTask(this));
+        }
+
         this.tasks = new ArrayList<>();
         JSONParser jsonParser = new JSONParser(this);
         initializeTasks(jsonParser.parse());
-
-        if (thread.isAlive()) {
-            thread.interrupt();
-        }
 
         if (tasks.size() > 0) {
             thread.start();
