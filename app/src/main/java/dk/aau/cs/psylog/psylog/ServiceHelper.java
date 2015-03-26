@@ -162,7 +162,7 @@ public class ServiceHelper {
         for(Module module : modules) {
             String type = "";
             if(module instanceof DataModule && !(((DataModule)module).getTask() == null))
-                type = "";
+                continue;
             else if (module instanceof AnalysisModule)
                 type = "analysis.";
             else if (module instanceof SensorModule)
