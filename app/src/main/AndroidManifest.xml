@@ -4,6 +4,7 @@
 
     <permission android:name="dk.aau.cs.psylog.psylog.READ_DB" />
     <permission android:name="dk.aau.cs.psylog.psylog.WRITE_DB" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -34,6 +35,13 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+
+        <receiver android:name=".BootCompletedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED">
+                </action>
+            </intent-filter>
+        </receiver>
 
         <service android:name=".TaskRunner"
             android:process=":my_process"/>
