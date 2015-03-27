@@ -2,6 +2,7 @@ package dk.aau.cs.psylog.psylog;
 
 import android.util.Pair;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -18,6 +19,11 @@ public class ModuleTask {
     public ModuleTask(DataModule module){
         this.module = module;
         setNextTime();
+    }
+
+    public ModuleTask(DataModule module, Date time){
+        this.module = module;
+        this.time = time;
     }
 
     public Long getTime(){
@@ -66,5 +72,18 @@ public class ModuleTask {
             return new Pair<>(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
         }
         throw new IllegalArgumentException("Illegal time format of: "  + date + ". Should be HH:mm.");
+    }
+
+    public String serialize(){
+        return module.getName() + '\t' + time.getTime();
+    }
+
+    public static ModuleTask deserialize(String value, ArrayList<DataModule> modules){
+        String[] strings = value.split("\t");
+        for(DataModule module : modules){
+            if(module.getName().equals(strings[0]))
+                return new ModuleTask(module,new Date(Long.parseLong(strings[1])));
+        }
+        return null;
     }
 }

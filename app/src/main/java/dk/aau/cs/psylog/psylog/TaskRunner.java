@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,31 @@ public class TaskRunner extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        loadSettings();
+    }
+
+    private void loadSettings(){
+        Set<String> settings = new SettingsHelper.Tasks(this).getSettings();
+        if(settings != null) {
+            tasks.clear();
+            ArrayList<DataModule> modules = new ArrayList<>();
+
+            for (Module module : new JSONParser(this).parse())
+                if (module instanceof DataModule && ((DataModule) module).getTask() != null && new SettingsHelper.Modules(this).getSettings(module.getName()))
+                    modules.add((DataModule) module);
+
+
+            for (String s : settings)
+                tasks.add(ModuleTask.deserialize(s, modules));
+        }
+    }
+
+    private void saveSettings(){
+        Set<String> serializedTasks = new HashSet<>();
+        for(ModuleTask moduleTask : tasks)
+            serializedTasks.add(moduleTask.serialize());
+
+        new SettingsHelper.Tasks(this).setSettings(serializedTasks);
     }
 
     @Override
@@ -77,17 +103,16 @@ public class TaskRunner extends Service {
         }
 
         sortAfterRunningTime();
-        Log.d("HejHej", "" + tasks.size());
-        if (tasks.size() > 0) {
-            Log.d("HejHej", "" + new Date(tasks.get(0).getTime()).toString());
+        saveSettings();
+        if (tasks.size() > 0)
             thread.start();
-        }
         return START_STICKY;
     }
 
     private void add(ModuleTask task){
         this.tasks.add(task);
         sortAfterRunningTime();
+        saveSettings();
     }
 
     private void sortAfterRunningTime(){
@@ -98,6 +123,7 @@ public class TaskRunner extends Service {
     {
         task.setNextTime();
         sortAfterRunningTime();
+        saveSettings();
     }
 
     private class RunTask implements Runnable {
