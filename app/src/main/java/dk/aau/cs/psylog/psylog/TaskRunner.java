@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,37 +25,64 @@ import dk.aau.cs.psylog.data_access_layer.generated.Module;
 import dk.aau.cs.psylog.data_access_layer.generated.Task;
 
 public class TaskRunner extends Service {
-    private ArrayList<ModuleTask> tasks;
-    final Thread thread = new Thread(new RunTask(this));
-
-    private void initializeTasks(ArrayList<Module> modules){
-        for (Module m : modules) {
-            if (m instanceof DataModule) {
-                 DataModule dataModule = ((DataModule) m);
-                if (dataModule.getTask() != null) {
-                    ModuleTask mt = new ModuleTask(dataModule);
-                    mt.setTime(getNextTime(mt.getModule().getTask()));
-                    tasks.add(mt);
-                }
-            }
-        }
-        sortAfterRunningTime();
-    }
+    private ArrayList<ModuleTask> tasks = new ArrayList<>();
+    Thread thread;
 
     @Override
     public void onCreate() {
-        this.tasks = new ArrayList<>();
-        JSONParser jsonParser = new JSONParser(this);
-        initializeTasks(jsonParser.parse());
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (tasks.size() > 0)
-            if (!thread.isAlive())
-                thread.start();
-        return START_NOT_STICKY;
+        if(thread != null && thread.isAlive()) {
+            thread.interrupt();
+        }
+        thread = new Thread(new RunTask(this));
+
+        ArrayList<DataModule> modules = new ArrayList<>();
+
+        HashSet<String> alreadyRunning = new HashSet<>();
+        for(ModuleTask moduleTask : tasks){
+            alreadyRunning.add(moduleTask.getModule().getName());
+        }
+        HashSet<String> shouldRun = new HashSet<>();
+        for(Module module : new JSONParser(this).parse()){
+            if(module instanceof DataModule && ((DataModule) module).getTask() != null && new SettingsHelper.Modules(this).getSettings(module.getName())) {
+                shouldRun.add(module.getName());
+                modules.add((DataModule)module);
+            }
+        }
+
+        HashSet<String> remove = new HashSet<>(alreadyRunning);
+        remove.removeAll(shouldRun);
+
+        HashSet<String> add = new HashSet<>(shouldRun);
+        add.removeAll(alreadyRunning);
+
+        for(String s : remove){
+            for(int i = 0; i < tasks.size(); i++){
+                if(tasks.get(i).getModule().getName().equals(s)) {
+                    tasks.remove(i);
+                    break;
+                }
+            }
+        }
+
+        for(String s : add){
+            for(int i = 0; i < modules.size(); i++){
+                if(modules.get(i).getName().equals(s))
+                    tasks.add(new ModuleTask(modules.get(i)));
+            }
+        }
+
+        sortAfterRunningTime();
+        Log.d("HejHej", "" + tasks.size());
+        if (tasks.size() > 0) {
+            Log.d("HejHej", "" + new Date(tasks.get(0).getTime()).toString());
+            thread.start();
+        }
+        return START_STICKY;
     }
 
     private void add(ModuleTask task){
@@ -68,44 +96,8 @@ public class TaskRunner extends Service {
 
     private void updateTaskTime(ModuleTask task)
     {
-        task.setTime(getNextTime(task.getModule().getTask()));
+        task.setNextTime();
         sortAfterRunningTime();
-    }
-
-    private Date getNextTime(Task task) throws IllegalArgumentException {
-        if (task.getType() == Task.Type.INTERVAL) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.MINUTE, parseInterval(task.getValue()));
-            return calendar.getTime();
-        }
-        else if (task.getType() == Task.Type.SCHEDULED){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            Pair<Integer,Integer> scheduledTime = parseScheduled(task.getValue());
-            calendar.set(Calendar.HOUR_OF_DAY, scheduledTime.first);
-            calendar.set(Calendar.MINUTE, scheduledTime.second);
-            calendar.set(Calendar.SECOND, 0);
-            if (calendar.getTimeInMillis() < new Date().getTime())
-                calendar.add(Calendar.HOUR_OF_DAY, 24);
-            return calendar.getTime();
-        }
-        throw new IllegalArgumentException("Task should only be of type " + Task.Type.SCHEDULED + " and " + Task.Type.INTERVAL + ".");
-    }
-
-    private int parseInterval(String minutes){
-        return Integer.parseInt(minutes);
-    }
-
-    private Pair<Integer,Integer> parseScheduled(String date) throws IllegalArgumentException
-    {
-        Pattern pattern = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
-        Matcher matcher = pattern.matcher(date);
-        if (matcher.matches()){
-            String[] time = date.split(":");
-            return new Pair<>(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
-        }
-        throw new IllegalArgumentException("Illegal time format of: "  + date + ". Should be HH:mm.");
     }
 
     private class RunTask implements Runnable {

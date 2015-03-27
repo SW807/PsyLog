@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import dk.aau.cs.psylog.PsyLogConstants;
+import dk.aau.cs.psylog.data_access_layer.JSONParser;
 import dk.aau.cs.psylog.data_access_layer.generated.AnalysisModule;
+import dk.aau.cs.psylog.data_access_layer.generated.DataModule;
 import dk.aau.cs.psylog.data_access_layer.generated.Module;
 import dk.aau.cs.psylog.data_access_layer.generated.SensorModule;
 import dk.aau.cs.psylog.data_access_layer.generated.ViewModule;
@@ -153,5 +155,24 @@ public class ServiceHelper {
         else if (module instanceof ViewModule)
             return PsyLogConstants.DOMAIN_NAME + "view." + module.getName();
         throw  new IllegalArgumentException("Unknown module type");
+    }
+
+    public static void startActiveServices(Context context){
+        JSONParser jsonParser = new JSONParser(context);
+        List<Module> modules = jsonParser.parse();
+        for(Module module : modules) {
+            String type = "";
+            if(module instanceof DataModule && !(((DataModule)module).getTask() == null))
+                continue;
+            else if (module instanceof AnalysisModule)
+                type = "analysis.";
+            else if (module instanceof SensorModule)
+                type = "sensor.";
+
+            if ((new SettingsHelper.Modules(context)).getSettings(module.getName()))
+                ServiceHelper.startService(PsyLogConstants.DOMAIN_NAME + type + module.getName(), context);
+            else
+                ServiceHelper.stopService(PsyLogConstants.DOMAIN_NAME + type + module.getName(), context);
+        }
     }
 }
