@@ -46,8 +46,9 @@ public class ServiceHelper {
     public static void stopService(String processName, Context context) {
         Intent i = new Intent();
         i.setComponent(new ComponentName(processName, processName + serviceName));
+        i.putExtra("action", "cancel");
         if (isServiceRunning(processName, context)) {
-            context.stopService(i);
+            context.startService(i);
         }
     }
 
