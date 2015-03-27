@@ -1,6 +1,7 @@
 package dk.aau.cs.psylog.data_access_layer;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,8 +30,8 @@ public class DBAccess extends ContentProvider{
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        sqLiteHelper.insertToDB(tableFromUri(uri),values);
-        return null;
+        long id = sqLiteHelper.insertToDB(tableFromUri(uri),values);
+        return ContentUris.withAppendedId(uri,id);
     }
 
     @Override
@@ -39,8 +40,8 @@ public class DBAccess extends ContentProvider{
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+    public int update(Uri uri, ContentValues values, String whereclause, String[] whereArgs) {
+        return sqLiteHelper.updateDB(tableFromUri(uri), values, whereclause, whereArgs);
     }
 
     private String tableFromUri(Uri uri) {
