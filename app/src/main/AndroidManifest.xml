@@ -34,10 +34,11 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-        <activity
+        <!--<activity
             android:name=".ListViewBarChartActivity"
             android:label="@string/title_activity_bar_chart" >
-        </activity>
+        </activity>-->
+        <service android:name=".TaskRunner" />
     </application>
 
 </manifest>

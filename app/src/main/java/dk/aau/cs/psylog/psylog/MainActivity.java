@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 
 public class MainActivity extends ActionBarActivity {
+    Intent taskRunnerIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,8 @@ public class MainActivity extends ActionBarActivity {
         Manager manager = new Manager(this);
         manager.updateModules();
 
-        /**/
+        taskRunnerIntent = new Intent(this, TaskRunner.class);
+        startService(taskRunnerIntent);
     }
 
     @Override

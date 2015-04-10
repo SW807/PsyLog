@@ -2,29 +2,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "SensorModule",
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.SensorModule",
-  "extends": { "$ref": "module.schema.json" },
+  "extends": { "$ref": "datamodule.schema.json" },
   "properties": {
-    "tables": {
-      "type": "array",
-      "items": { "$ref": "table.schema.json" },
-      "minItems": 1,
-      "uniqueItems": true
-    }
+    "empty": { "type": "string", "description": "This is a hack to force class to be generated" }
   },
-  "additionalProperties": false,
-  "definitions": {
-    "table": {
-      "properties": {
-        "name": { "type": "string" },
-        "columns": {
-          "type": "array",
-          "items": { "$ref": "column.schema.json" },
-          "minItems": 1,
-          "uniqueItems": true
-        }
-      },
-      "additionalProperties": false,
-      "required": [ "name", "columns" ]
-    }
-  }
+  "additionalProperties": false
 }
