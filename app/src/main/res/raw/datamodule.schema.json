@@ -11,8 +11,8 @@
       "minItems": 1,
       "uniqueItems": true
     },
-    "task": { "$ref": "task.schema.json" }
+    "task": { "$ref": "task.schema.json", "description": "If no task is supplied, defaults to continuous" }
   },
-  "required": [ "name", "_version" ],
+  "required": ["name", "_version"],
   "additionalProperties": false
 }
