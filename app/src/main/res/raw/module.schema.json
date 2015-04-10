@@ -5,6 +5,7 @@
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.Module",
   "properties": {
     "name": { "type": "string" },
+    "_userfriendlyname": { "type": "string" },
     "_version": {
       "type": "number",
       "minimum": 0.0,

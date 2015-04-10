@@ -66,7 +66,12 @@ public class SettingsActivity extends PreferenceActivity {
     private void FillHashMaps() {
         for (Module m : modules) {
             stringModuleHashMap.put(m.getName(), m);
-            moduleModuleNodeHashMap.put(m, new ModuleNode(makePreference(m.getName(), m.getName(), m.get_description(), false, false)));
+            String shownName = m.getName();
+            if(m.get_userfriendlyname() != null)
+            {
+                shownName = m.get_userfriendlyname();
+            }
+            moduleModuleNodeHashMap.put(m, new ModuleNode(makePreference(m.getName(), shownName, m.get_description(), false, false)));
         }
     }
 
