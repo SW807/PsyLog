@@ -46,8 +46,11 @@ public class TaskRunner extends Service {
                     modules.add((DataModule) module);
 
 
-            for (String s : settings)
-                tasks.add(ModuleTask.deserialize(s, modules));
+            for (String s : settings) {
+                ModuleTask m = ModuleTask.deserialize(s, modules);
+                if(m != null)
+                    tasks.add(m);
+            }
         }
     }
 
