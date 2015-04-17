@@ -11,7 +11,7 @@ public class SettingsHelper {
         private SharedPreferences settings;
 
         public Modules(Context context){
-            settings = context.getSharedPreferences(PREFS_NAME,context.MODE_PRIVATE);
+            settings = context.getSharedPreferences(PREFS_NAME,context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         }
 
         public void setSettings(String moduleName, boolean value){
@@ -31,7 +31,7 @@ public class SettingsHelper {
         private SharedPreferences settings;
 
         public Tasks(Context context){
-            settings = context.getSharedPreferences(PREFS_NAME,context.MODE_PRIVATE);
+            settings = context.getSharedPreferences(PREFS_NAME,context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         }
 
         public void setSettings(Set<String> stringSet){
