@@ -138,7 +138,7 @@ public class TaskRunner extends Service {
 
         @Override
         public void run() {
-            while (true) {
+            while (true && tasks.size() > 0) {
                 ModuleTask task = tasks.get(0);
                 sleep();
                 ServiceHelper.startService(ServiceHelper.getProcessName(task.getModule()), ctx);
