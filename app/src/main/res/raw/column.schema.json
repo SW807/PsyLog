@@ -5,7 +5,7 @@
   "javaType": "dk.aau.cs.psylog.data_access_layer.generated.Column",
   "properties": {
     "name": { "type": "string" },
-    "dataType": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB" ]},
+    "dataType": { "enum": [ "INTEGER", "REAL", "TEXT", "BLOB", "BOOLEAN" ]},
     "nullable": { "type": "boolean" },
     "_unit": { "type": "string" }
   },
