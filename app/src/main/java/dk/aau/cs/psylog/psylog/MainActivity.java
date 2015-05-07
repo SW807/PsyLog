@@ -47,6 +47,15 @@ public class MainActivity extends ActionBarActivity {
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
         int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
         layout.addView(textView);
+        layout.addView(accChart, getResources().getDisplayMetrics().widthPixels, height);
+    }
+
+    private void addColumnChart(String xAxis, String yAxis, String table, String textDescription){
+        TextView textView = new TextView(this);
+        textView.setText(textDescription);
+        BarChart accChart = new BarChart(this,xAxis,yAxis, table);
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+        layout.addView(textView);
         layout.addView(accChart,getResources().getDisplayMetrics().widthPixels, height);
     }
 
@@ -103,7 +112,8 @@ public class MainActivity extends ActionBarActivity {
                 case "soundsleepanalysis":
                     addGraph("time", "prob", "SOUNDSLEEPANALYSIS_sleepcalc","Amplitude Søvn Graf:");
                     break;
-                case "temp1":
+                case "stepcountaggregator":
+                    addColumnChart("date","stepcount","STEPCOUNTAGGREGATOR_result","I like turtles");
                     break;
                 case "temp2":
                     break;
