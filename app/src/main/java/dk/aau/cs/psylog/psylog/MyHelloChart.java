@@ -63,8 +63,13 @@ public class MyHelloChart extends LineChartView {
         }
         Axis axisX = new Axis(axisValues).setHasLines(true);
         axisX.setTextSize(8);
+        ArrayList<AxisValue> listYAxis = new ArrayList();
+        for(float f = 0.0f; f <= 1.0f; f++)
+        {
+            listYAxis.add(new AxisValue(f).setLabel(String.valueOf(f)));
+        }
 
-        Axis axisY = Axis.generateAxisFromRange(0.0f, 1.0f, 0.1f).setHasLines(true);
+        Axis axisY = new Axis(listYAxis);//Axis.generateAxisFromRange(0.0f, 1.0f, 0.1f).setHasLines(true);
         axisX.setName("Tid");
         axisX.setMaxLabelChars(20);
         axisY.setName("Sandsynlighed");

@@ -3,6 +3,7 @@ package dk.aau.cs.psylog.psylog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -39,6 +41,13 @@ public class MainActivity extends ActionBarActivity {
 
         //showView();
     }
+
+    private void addRuler()
+    {
+        View ruler = new View(this); ruler.setBackgroundColor(0xFF000000);
+        layout.addView(ruler,
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 5));
+    }
     private void addGraph(String xAxis, String yAxis, String table, String textDescription)
     {
         TextView textView = new TextView(this);
@@ -52,12 +61,16 @@ public class MainActivity extends ActionBarActivity {
 
     private void addTableForSleepAggregator()
     {
+        Drawable border = getResources().getDrawable(R.drawable.cell_shape);
         TableLayout myTable = new TableLayout(this);
         TableRow myTableRowTitles = new TableRow(this);
         TextView startDateTextView = new TextView(this);
+        startDateTextView.setBackground(border);
 
         TextView endDateTextView = new TextView(this);
+        endDateTextView.setBackground(border);
         TextView probTextView = new TextView(this);
+        probTextView.setBackground(border);
         startDateTextView.setText("Start Tid");
         endDateTextView.setText("Slut Tid");
         probTextView.setText("Sandsynlighed");
@@ -70,11 +83,15 @@ public class MainActivity extends ActionBarActivity {
 
         if(c.moveToFirst()) {
             do {
+
                 TextView startD = new TextView(this);
                 startD.setText(c.getString(c.getColumnIndex("startdate")));
+                startD.setBackground(border);
                 TextView endD = new TextView(this);
+                endD.setBackground(border);
                 endD.setText(c.getString(c.getColumnIndex("enddate")));
                 TextView probT = new TextView(this);
+                probT.setBackground(border);
                 probT.setText(c.getString(c.getColumnIndex("prob")));
                 TableRow tr = new TableRow(this);
                 tr.addView(startD);
@@ -82,6 +99,7 @@ public class MainActivity extends ActionBarActivity {
                 tr.addView(probT);
                 myTable.addView(tr);
             }while (c.moveToNext());
+            myTable.setStretchAllColumns(true);
             layout.addView(myTable);
         }
 
@@ -93,21 +111,26 @@ public class MainActivity extends ActionBarActivity {
             switch (m.getName().toString()) {
                 case "accelerationsleepanalysis":
                     addGraph("time", "prob", "ACCELERATIONSLEEPANALYSIS_sleepcalc","Accelerations Søvn Graf:");
+                    addRuler();
                     break;
                 case "sleepaggregator":
                     addTableForSleepAggregator();
+                    addRuler();
                     break;
                 case "sleepstationary":
                     addGraph("time", "prob", "SLEEPSTATIONARY_sleepcalc","Kombineret Søvn Graf:");
+                    addRuler();
                     break;
                 case "soundsleepanalysis":
                     addGraph("time", "prob", "SOUNDSLEEPANALYSIS_sleepcalc","Amplitude Søvn Graf:");
+                    addRuler();
                     break;
                 case "temp1":
                     break;
                 case "temp2":
                     break;
             }
+
             //   Log.e("YOYOBITCH", );
         }
     }
