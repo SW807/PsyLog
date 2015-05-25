@@ -1,5 +1,6 @@
 package dk.aau.cs.psylog.psylog;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,12 +10,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -70,16 +75,33 @@ public class MainActivity extends ActionBarActivity {
 
     private void addTableForSleepAggregator()
     {
-        Drawable border = getResources().getDrawable(R.drawable.cell_shape);
+        int padding = 20;
+        HorizontalScrollView scrollView = new HorizontalScrollView(this);
+        scrollView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
         TableLayout myTable = new TableLayout(this);
+        myTable.setBackground(getResources().getDrawable(R.drawable.cell_shape));
         TableRow myTableRowTitles = new TableRow(this);
+        myTableRowTitles.setBackground(getResources().getDrawable(R.drawable.cell_shape));
         TextView startDateTextView = new TextView(this);
-        startDateTextView.setBackground(border);
+        startDateTextView.setBackground(getResources().getDrawable(R.drawable.cell_shape));
+        startDateTextView.setLayoutParams(params);
+        startDateTextView.setGravity(Gravity.CENTER);
+        startDateTextView.setPadding(padding, 0, padding, 0);
 
         TextView endDateTextView = new TextView(this);
-        endDateTextView.setBackground(border);
+        endDateTextView.setBackground(getResources().getDrawable(R.drawable.cell_shape));
+        endDateTextView.setLayoutParams(params);
+        endDateTextView.setGravity(Gravity.CENTER);
+        endDateTextView.setPadding(padding, 0, padding, 0);
+
         TextView probTextView = new TextView(this);
-        probTextView.setBackground(border);
+        probTextView.setBackground(getResources().getDrawable(R.drawable.cell_shape));
+        probTextView.setLayoutParams(params);
+        probTextView.setGravity(Gravity.CENTER);
+        probTextView.setPadding(padding, 0, padding, 0);
+
         startDateTextView.setText("Start Tid");
         endDateTextView.setText("Slut Tid");
         probTextView.setText("Sandsynlighed");
@@ -95,21 +117,35 @@ public class MainActivity extends ActionBarActivity {
 
                 TextView startD = new TextView(this);
                 startD.setText(c.getString(c.getColumnIndex("startdate")));
-                startD.setBackground(border);
+                startD.setBackground(getResources().getDrawable(R.drawable.cell_shape));
+                startD.setLayoutParams(params);
+                startD.setGravity(Gravity.CENTER);
+                startD.setPadding(padding, 0, padding, 0);
+
                 TextView endD = new TextView(this);
-                endD.setBackground(border);
+                endD.setBackground(getResources().getDrawable(R.drawable.cell_shape));
                 endD.setText(c.getString(c.getColumnIndex("enddate")));
+                endD.setLayoutParams(params);
+                endD.setGravity(Gravity.CENTER);
+                endD.setPadding(padding, 0, padding, 0);
+
                 TextView probT = new TextView(this);
-                probT.setBackground(border);
+                probT.setBackground(getResources().getDrawable(R.drawable.cell_shape));
                 probT.setText(c.getString(c.getColumnIndex("prob")));
+                probT.setLayoutParams(params);
+                probT.setGravity(Gravity.CENTER);
+                probT.setPadding(padding, 0, padding, 0);
+
                 TableRow tr = new TableRow(this);
+                tr.setBackground(getResources().getDrawable(R.drawable.cell_shape));
                 tr.addView(startD);
                 tr.addView(endD);
                 tr.addView(probT);
                 myTable.addView(tr);
             }while (c.moveToNext());
             myTable.setStretchAllColumns(true);
-            layout.addView(myTable);
+            scrollView.addView(myTable);
+            layout.addView(scrollView);
         }
 
     }

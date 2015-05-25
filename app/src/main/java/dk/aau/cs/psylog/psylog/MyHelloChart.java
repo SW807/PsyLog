@@ -84,7 +84,8 @@ public class MyHelloChart extends LineChartView {
             Date prevDate = sdf.parse("1000-10-10 10:10:10.101");
             ArrayList<PointValue> returnList = new ArrayList<>();
             Uri uri = Uri.parse("content://dk.aau.cs.psylog.data_access_layer/" + tableName);
-            Cursor cursor = contentResolver.query(uri, new String[]{yAxis, xAxis}, null, null, null);
+            //This is a hack, since we have few points already with accelerationsleep we do not have to reduce it.
+            Cursor cursor = contentResolver.query(uri, new String[]{yAxis, xAxis}, tableName == "ACCELERATIONSLEEPANALYSIS_sleepcalc" ? null : "(_id % 100) = 0", null, null);
             int i = 0;
             final int blockSize = 5;
             int index = 0;
