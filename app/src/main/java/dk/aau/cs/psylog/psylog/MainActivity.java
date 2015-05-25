@@ -172,6 +172,7 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case "stepcountaggregator":
                     addColumnChart("date","stepcount","STEPCOUNTAGGREGATOR_result","Skridttæller");
+                    addRuler();
                     break;
                 case "temp2":
                     break;
